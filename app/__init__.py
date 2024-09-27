@@ -9,8 +9,9 @@ def create_app():
     app = Flask(__name__)
     
     # Configurações
-    app.config['SECRET_KEY'] = 'sua_chave_secreta'  # Defina uma chave secreta
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/test'
+    app.config['SECRET_KEY'] = 'f8ee8897dc09a283101bac9111785cbf1ca69a812a79e23075db7e3c4ecfbcaf'  # Defina uma chave secreta
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://pcm_leads:Pcm@123INFRA@pcm_leads.mysql.dbaas.com.br/pcm_leads'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     db.init_app(app)
     login_manager.init_app(app)
