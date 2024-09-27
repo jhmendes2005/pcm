@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    {% if css_file %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/' ~ css_file) }}">
+    {% endif %}
+    <title>{{ header_title }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="header">
+            <div class="logo-layout">
+                <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='IMG/PCM.png') }} "></a>
+            </div>
+            <ul class="menu-header">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">Sobre</a></li>
+                {% if current_user.is_authenticated %}
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Minha Conta</a>
+                        <ul class="dropdown-content">
+                            <li id="title-name-dropdown">Seja bem vindo(a),</li>
+                            <li id="name-dropdown">{{ current_user.name }}</li>
+                            {% if current_user.role == 'owner' or current_user.role == 'admin' %}
+                                <li><a href="{{ url_for('leads') }}">Gerenciar Leads</a></li>
+                            {% endif %}
+                            <li><a href="{{ url_for('leads') }}">Ligações</a></li>
+                            <li><a href="{{ url_for('my_account') }}">Minha Conta</a></li>
+                            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}" id="login-header">Entrar</a></li>
+                {% endif %}
+                {% if current_user.role == 'admin' %}
+                    <li><a href="{{ url_for('admin_page') }}">Painel Admin</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <span>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </span>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <div>
+            <p>Desenvolvido por {{ author }}</p>
+            <p>{{ project }} - {{ version }} &copy; Todos os direitos reservados {{ year_copy }}</p>
+        </div>
+    </footer>
+    {% block scripts %}{% endblock %}
+    <script>
+        let inactivityTime = function () {
+            let time;
+            let timeout = 15 * 60 * 1000;  // Tempo de inatividade em milissegundos (15 minutos)
+
+            window.onload = resetTimer;
+            document.onmousemove = resetTimer;
+            document.onkeypress = resetTimer;
+            document.ontouchstart = resetTimer;  // Para dispositivos móveis
+
+            function logoutUser() {
+                alert("Você foi desconectado por inatividade.");
+                window.location.href = "{{ url_for('logout') }}";  // Redireciona para o logout
+            }
+
+            function resetTimer() {
+                clearTimeout(time);
+                time = setTimeout(logoutUser, timeout);  // Após 15 minutos de inatividade, logout
+            }
+        };
+
+        inactivityTime();
+    </script>
+</body>
+</html>

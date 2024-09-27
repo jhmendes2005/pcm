@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% set css_file = 'my_account.css' %}
+{% block content %}
+    <section id="my-data">
+        <h1 id="title-component">Meus Dados:</h1>
+        <h2 id="sub-title-component">Conta: {{current_user.role}}</h2>
+        {% if current_user.is_authenticated %}
+            <form action="{{ url_for('update_account') }}" method="POST" id="form-update-account">
+                <div>
+                    <label for="name">Nome:</label>
+                    <input type="text" id="name" class="input-form-default" name="name" value="{{ current_user.name }}" required>
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" class="input-form-default" name="email" value="{{ current_user.email }}" required>
+                </div>
+                <div>   
+                    <label for="password">Nova Senha:</label>
+                    <input type="password" id="password" class="input-form-default" name="password" placeholder="Digite uma nova senha">
+                </div>
+                <div id="button-center">
+                    <button type="submit" class="button-form-default">Atualizar</button>
+                </div>
+            </form>
+        {% endif %}
+    </section>
+    {% if current_user.role == 'owner' or current_user.role == 'admin' %}
+        {% if companies %}
+            <section id="my-companies">
+                <h1 id="title-component">Minhas Empresas:</h1>
+                {% for company in companies %}
+                    <form action="{{ url_for('home') }}" method="POST" id="form-update-companie">
+                        <div>
+                            <label for="name">Nome da empresa:</label>
+                            <input type="text" id="company_name" class="input-form-default" name="company_name" value="{{ company.nome }}" required>
+                        </div>
+                        <div>
+                            <label for="name">CNPJ:</label>
+                            <input type="text" id="company_cnpj" class="input-form-default" name="company_cnpj" value="{{ company.cnpj }}" readonly>
+                        </div>
+                        <div>
+                            <label for="name">Plano Atual:</label>
+                            <input type="text" id="company_plan" class="input-form-default" name="company_cnpj" value="{{ company.plan }}" readonly>
+                        </div>
+                        <div id="button-center">
+                            <button type="submit " class="button-form-default">Gerenciar</button>
+                        </div>
+                    </form>
+                    <hr>
+                {% endfor %}
+            </section>   
+        {% endif %}
+    {% endif %}
+{% endblock %}

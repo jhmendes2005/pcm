@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% set css_file = 'leads.css' %}
+{% block content %}
+    <div>
+        <section id="section-title">
+            <h1 id="title-page">Painel de Leads!</h1>
+            <h2 id="company-title">Você está gerenciando a empresa '{{ company.nome }}'</h2>
+        </section>
+        
+        <!-- Formulário para selecionar a empresa -->
+        <form id="select-company" method="GET" action="{{ url_for('leads') }}">
+            <label for="company" id="label-leads-select">Selecionar Empresa:</label>
+            <select name="company_id" id="company" onchange="this.form.submit()">
+                {% for company in companies %}
+                    <option value="{{ company.id }}" {% if company.id == selected_company.id %}selected{% endif %}>
+                        {{ company.nome }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+        
+        <section id="forms-export-filter">       
+            <form method="GET" action="{{ url_for('leads') }}" id="filter-leads">
+                <input type="hidden" name="company_id" value="{{ selected_company.id }}">
+                <label for="status">Filtrar por Status:</label>
+                <select name="status" id="status">
+                    <option value="all" {% if request.args.get('status') == 'all' %}selected{% endif %}>Todos</option>
+                    <option value="pending" {% if request.args.get('status') == 'pending' %}selected{% endif %}>Pendente</option>
+                    <option value="in_progress" {% if request.args.get('status') == 'in_progress' %}selected{% endif %}>Em Andamento</option>
+                    <option value="completed" {% if request.args.get('status') == 'completed' %}selected{% endif %}>Finalizado</option>
+                    <option value="cancelled" {% if request.args.get('status') == 'cancelled' %}selected{% endif %}>Cancelado</option>
+                </select>
+                <label for="leads_limit">Exibir:</label>
+                <select name="leads_limit" id="leads_limit">
+                    <option value="20" {% if leads_limit == 20 %}selected{% endif %}>20</option>
+                    <option value="40" {% if leads_limit == 40 %}selected{% endif %}>40</option>
+                    <option value="60" {% if leads_limit == 60 %}selected{% endif %}>60</option>
+                    <option value="80" {% if leads_limit == 80 %}selected{% endif %}>80</option>
+                    <option value="100" {% if leads_limit == 100 %}selected{% endif %}>100</option>
+                </select>
+                <button type="submit">Filtrar</button>
+            </form>
+            <form method="GET" action="{{ url_for('export_leads') }}" id="export-leads">
+                <input type="hidden" name="company_id" value="{{ selected_company.id }}">
+                <button type="submit">Exportar Leads</button>
+            </form>
+            <div class="add-import-lead">
+                <a href="{{ url_for('add_lead') }}">Adicionar Lead</a>
+            </div>
+            <div class="add-import-lead">
+                <a href="{{ url_for('import_leads') }}">Importar Leads em Massa</a>
+            </div> 
+        </section>
+
+        <table id="table-leads">
+            <thead>
+                {% if leads %}
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Telefone</th>
+                        <th>Status</th>
+                        <th>Comentário</th>
+                        <th>Veículo</th>
+                        <th>Criado em</th>
+                        <th>Atualizado em</th>
+                        <th>Ações</th>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <th colspan="9">Nenhum lead encontrado.</th>
+                    </tr>
+                {% endif %}
+            </thead>
+            <tbody>
+                {% for lead in leads %}
+                    <tr>
+                        <td>{{ lead.id }}</td>
+                        <td>{{ lead.nome }}</td>
+                        <td>{{ lead.telefone }}</td>
+                        <td>{{ lead.status }}</td>
+                        <td>{{ lead.comentario }}</td>
+                        <td>{{ lead.veiculo }}</td>
+                        <td>{{ lead.created_at }}</td>
+                        <td>{{ lead.updated_at }}</td>
+                        <td><a href="#" class="edit-lead" data-lead-id="{{ lead.id }}" data-lead-nome="{{ lead.nome }}" data-lead-telefone="{{ lead.telefone }}" data-lead-status="{{ lead.status }}" data-lead-comentario="{{ lead.comentario }}" data-lead-veiculo="{{ lead.veiculo }}">Editar</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal para edição de lead -->
+    <div id="editLeadModal" style="display:none;">
+        <div>
+            <h2>Editar Lead</h2>
+            <form id="edit-lead-form" method="POST" action="{{ url_for('update_lead') }}">
+                <input type="hidden" name="lead_id" id="lead_id">
+                <label for="lead_nome">Nome:</label>
+                <input type="text" name="lead_nome" id="lead_nome" required>
+                <label for="lead_telefone">Telefone:</label>
+                <input type="text" name="lead_telefone" id="lead_telefone" required>
+                <label for="lead_status">Status:</label>
+                <select name="lead_status" id="lead_status">
+                    <option value="pending">Pendente</option>
+                    <option value="in_progress">Em Andamento</option>
+                    <option value="completed">Finalizado</option>
+                    <option value="cancelled">Cancelado</option>
+                </select>
+                <label for="lead_comentario">Comentário:</label>
+                <textarea name="lead_comentario" id="lead_comentario"></textarea>
+                <label for="lead_veiculo">Veículo:</label>
+                <input type="text" name="lead_veiculo" id="lead_veiculo">
+                <button type="submit">Salvar</button>
+                <button type="button" id="closeModal">Fechar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.edit-lead').forEach(item => {
+            item.addEventListener('click', event => {
+                event.preventDefault();
+                
+                // Preenche o modal com as informações do lead
+                document.getElementById('lead_id').value = item.getAttribute('data-lead-id');
+                document.getElementById('lead_nome').value = item.getAttribute('data-lead-nome');
+                document.getElementById('lead_telefone').value = item.getAttribute('data-lead-telefone');
+                document.getElementById('lead_status').value = item.getAttribute('data-lead-status');
+                document.getElementById('lead_comentario').value = item.getAttribute('data-lead-comentario');
+                document.getElementById('lead_veiculo').value = item.getAttribute('data-lead-veiculo');
+
+                // Mostra o modal
+                document.getElementById('editLeadModal').style.display = 'block';
+            });
+        });
+
+        document.getElementById('closeModal').addEventListener('click', () => {
+            document.getElementById('editLeadModal').style.display = 'none';
+        });
+    </script>
+{% endblock %}

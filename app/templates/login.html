@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div>
+        <div class="loader" id="loader" style="display: none;"></div>  <!-- Carregador escondido por padrão -->
+        
+        <form method="POST" onsubmit="showLoader()">  <!-- Chama a função showLoader ao enviar -->
+            <input type="email" name="email" placeholder="E-mail" required>
+            <input type="password" name="password" placeholder="Senha" required>
+            <button type="submit">Entrar</button>
+        </form>
+        <p>Ainda não tem uma conta? <a href="{{ url_for('register') }}">Registre-se</a></p>
+    </div>
+
+    <style>
+        /* Estilos do carregador */
+        .loader {
+            border: 8px solid #f3f3f3; /* Cor do fundo */
+            border-top: 8px solid #3498db; /* Cor do carregador */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            position: absolute;  /* Fica em cima do formulário */
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
+    <script>
+        function showLoader() {
+            document.getElementById('loader').style.display = 'block'; // Mostra o carregador
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% set css_file = 'import_leads.css' %}
+{% block content %}
+    <div>
+        <h1>Importar Leads em Massa</h1>
+        <form method="POST" action="{{ url_for('import_leads') }}" enctype="multipart/form-data">
+            <label for="empresa_id">Selecione a Empresa:</label>
+            <select name="empresa_id" id="empresa_id" required>
+                <option value="">-- Selecione uma Empresa --</option>
+                {% for empresa in empresas %}
+                    <option value="{{ empresa.id }}">{{ empresa.nome }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="file">Escolha um arquivo (.xlsx ou .csv):</label>
+            <input type="file" name="file" id="file" required>
+
+            <button type="submit">Importar Leads</button>
+        </form>
+    </div>
+{% endblock %}

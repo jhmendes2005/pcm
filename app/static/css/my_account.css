@@ -1,0 +1,68 @@
+#my-data {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* horizontal vertical blur color */
+    padding: 20px; /* Adiciona um padding interno, se necessário */
+    background-color: white; 
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+#title-component {
+    font-size: 30px;
+    width: 100%;
+    text-align: center;
+}
+
+#sub-title-component {
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+#form-update-account {
+    width: 100%;
+}
+
+#form-update-account div, label, input {
+    width: 100%;
+}
+
+#my-companies {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* horizontal vertical blur color */
+    padding: 20px; /* Adiciona um padding interno, se necessário */
+    background-color: white; 
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+#form-update-companie {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+#form-update-companie label {
+    width: 100%;
+}
+
+#form-update-companie input {
+    width: 100%;
+}
+
+#button-center {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}

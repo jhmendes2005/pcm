@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% set css_file = 'add_lead.css' %}
+{% block content %}
+    <div>
+        <h1>Adicionar Lead</h1>
+        <form method="POST" action="{{ url_for('add_lead') }}">
+            <label for="empresa_id">Selecionar Empresa:</label>
+            <select name="empresa_id" id="empresa_id" required>
+                {% for company in companies %}
+                    <option value="{{ company.id }}">{{ company.nome }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="nome">Nome:</label>
+            <input type="text" name="nome" id="nome" required>
+
+            <label for="telefone">Telefone:</label>
+            <input type="text" name="telefone" id="telefone" required>
+
+            <label for="status">Status:</label>
+            <select name="status" id="status" required>
+                <option value="pending">Pendente</option>
+                <option value="in_progress">Em Andamento</option>
+                <option value="completed">Finalizado</option>
+                <option value="cancelled">Cancelado</option>
+            </select>
+
+            <label for="comentario">Comentário:</label>
+            <textarea name="comentario" id="comentario"></textarea>
+
+            <label for="veiculo">Veículo de Interesse:</label>
+            <input type="text" name="veiculo" id="veiculo">
+
+            <button type="submit">Adicionar Lead</button>
+        </form>
+    </div>
+{% endblock %}

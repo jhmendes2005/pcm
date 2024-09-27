@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% set css_file = 'index.css' %}
+{% block content %}
+    <div class="soft">
+        {% if current_user.is_authenticated %}
+            <h2>Olá, {{ current_user.name }}!</h2>
+        {% else %}
+            <h2>Você não está logado.</h2>
+            <a href="{{ url_for('login') }}">Faça login aqui</a>
+        {% endif %}
+    </div>
+{% endblock %}

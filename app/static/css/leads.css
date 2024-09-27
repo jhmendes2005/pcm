@@ -1,0 +1,195 @@
+main {
+    margin: 0 auto;
+}
+
+#section-title {
+    display: flex;
+    margin: 10px 0 30px; /* Unifica as margens */
+    flex-wrap: wrap;
+}
+
+#title-page, #company-title {
+    text-align: center;
+    width: 100%;
+}
+
+#title-page {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+#company-title {
+    font-size: 15px;
+}
+
+#select-company {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    margin: 15px 0; /* Unifica margens */
+}
+
+#select-company label {
+    margin-bottom: 5px;
+}
+
+#forms-export-filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#filter-leads {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px 0; /* Unifica margens */
+}
+
+#filter-leads label {
+    font-size: 12px;
+    margin-right: 10px;
+}
+
+#filter-leads select, 
+#filter-leads button {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 12px;
+    margin-right: 10px;
+    background-color: #f8f9fa;
+    transition: border-color 0.3s;
+    cursor: pointer;
+}
+
+#filter-leads select:focus {
+    border-color: #007bff;
+    outline: none;
+    background-color: #ffffff;
+}
+
+#export-leads, 
+.add-import-lead a {
+    color: white;
+    background-color: black;
+    padding: 8px;
+    text-decoration: none;
+    margin-left: 8px;
+    font-size: 12px;
+}
+
+#export-leads button, 
+.add-import-lead a {
+    cursor: pointer;
+}
+
+#export-leads button {
+    border: solid black;
+    background-color: black;
+    color: white;
+}
+
+#export-leads button:hover, 
+.add-import-lead a:hover {
+    transition-duration: 0.5s;
+    color: white;
+    background-color: red;
+    border: solid red;
+}
+
+#table-leads {
+    border: solid 2px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+#table-leads thead tr {
+    border: solid 2px;
+    font-size: 18px;
+    background-color: black;
+}
+
+#table-leads thead th, 
+#table-leads tbody td {
+    border: solid 1px;
+    padding: 6px;
+    text-align: center;
+}
+
+#table-leads thead th {
+    font-size: 18px;
+    color: white;
+}
+
+#table-leads tbody tr {
+    font-size: 12px;
+}
+
+#editLeadModal {
+    display: none; /* Inicialmente oculto */
+    position: fixed;
+    z-index: 1000; /* Garantir que o modal fique acima de outros elementos */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Permitir rolagem caso o conteúdo exceda a tela */
+    background-color: rgba(0, 0, 0, 0.4); /* Fundo escuro */
+}
+
+/* Conteúdo do modal */
+#editLeadModal div {
+    background-color: white;
+    margin: 15% auto; /* Centralizar modal verticalmente */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Ajuste conforme necessário para responsividade */
+    max-width: 500px; /* Limitar a largura máxima */
+    border-radius: 8px; /* Arredondamento dos cantos */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Adicionar sombra */
+    position: relative; /* Para posicionar elementos filhos, como o botão de fechar */
+}
+
+/* Título do modal */
+#editLeadModal h2 {
+    margin-top: 0; /* Remover margem superior */
+    font-size: 1.5rem; /* Tamanho do título */
+    color: #333; /* Cor do texto */
+}
+
+/* Botão de fechamento */
+#editLeadModal .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none; /* Remover fundo */
+    border: none; /* Remover borda */
+    font-size: 28px; /* Tamanho maior, semelhante ao segundo exemplo */
+    color: #aaa; /* Cor inicial */
+    cursor: pointer; /* Alterar o cursor */
+}
+
+#editLeadModal .close-button:hover,
+#editLeadModal .close-button:focus {
+    color: black; /* Cor ao passar o mouse */
+    text-decoration: none;
+}
+
+/* Estilo do botão de ação */
+#editLeadModal button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#editLeadModal button:hover {
+    background-color: #0056b3; /* Efeito ao passar o mouse */
+}
+

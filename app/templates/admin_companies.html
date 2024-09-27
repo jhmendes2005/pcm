@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% set css_file = 'admin_companies.css' %}
+
+{% block content %}
+<main>
+    <h1>Administração de Empresas</h1>
+
+    <div>
+        <!-- Exibir mensagens de flash -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
+    </div>
+    
+    <h2>Lista de Empresas</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>CNPJ</th>
+                <th>Plano</th>
+                <th>Admins</th>
+                <th>Colaboradores</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for company in companies %}
+            <tr>
+                <td>{{ company.id }}</td>
+                <td>{{ company.nome }}</td>
+                <td>{{ company.cnpj }}</td>
+                <td>{{ company.plan }}</td>
+                <td>{{ company.admins }}</td>
+                <td>{{ company.collaborator }}</td>
+                <td>
+                    <button type="button" class="edit-btn" data-id="{{ company.id }}" data-nome="{{ company.nome }}" data-cnpj="{{ company.cnpj }}" data-plan="{{ company.plan }}" data-admins="{{ company.admins }}" data-collaborator="{{ company.collaborator }}">Editar</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Modal de Edição -->
+    <div id="editCompanyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2>Editar Empresa</h2>
+            <form method="POST" action="/update_company">
+                <input type="hidden" name="id" id="companyId">
+                <div>
+                    <label for="companyNome">Nome:</label>
+                    <input type="text" id="companyNome" name="nome" required>
+                </div>
+                <div>
+                    <label for="companyCNPJ">CNPJ:</label>
+                    <input type="text" id="companyCNPJ" name="cnpj" required>
+                </div>
+                <div>
+                    <label for="companyPlan">Plano:</label>
+                    <input type="number" id="companyPlan" name="plan" required>
+                </div>
+                <div>
+                    <label for="companyAdmins">Admins:</label>
+                    <input type="text" id="companyAdmins" name="admins">
+                </div>
+                <div>
+                    <label for="companyCollaborator">Colaboradores:</label>
+                    <input type="text" id="companyCollaborator" name="collaborator">
+                </div>
+                <button type="submit">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Função para abrir o modal e preencher os campos com as informações da empresa
+    function openEditModal(id, nome, cnpj, plan, admins, collaborator) {
+        document.getElementById('companyId').value = id;
+        document.getElementById('companyNome').value = nome;
+        document.getElementById('companyCNPJ').value = cnpj;
+        document.getElementById('companyPlan').value = plan;
+        document.getElementById('companyAdmins').value = admins;
+        document.getElementById('companyCollaborator').value = collaborator;
+        document.getElementById('editCompanyModal').style.display = 'block';
+    }
+
+    // Função para fechar o modal
+    function closeEditModal() {
+        document.getElementById('editCompanyModal').style.display = 'none';
+    }
+
+    // Adicionar evento de clique para abrir o modal ao clicar no botão "Editar"
+    document.addEventListener('DOMContentLoaded', function () {
+        var editButtons = document.querySelectorAll('.edit-btn');
+        editButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var companyId = this.getAttribute('data-id');
+                var companyNome = this.getAttribute('data-nome');
+                var companyCNPJ = this.getAttribute('data-cnpj');
+                var companyPlan = this.getAttribute('data-plan');
+                var companyAdmins = this.getAttribute('data-admins');
+                var companyCollaborator = this.getAttribute('data-collaborator');
+                openEditModal(companyId, companyNome, companyCNPJ, companyPlan, companyAdmins, companyCollaborator);
+            });
+        });
+    });
+
+    // Fecha o modal se clicar fora do conteúdo do modal
+    window.onclick = function(event) {
+        const modal = document.getElementById('editCompanyModal');
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}

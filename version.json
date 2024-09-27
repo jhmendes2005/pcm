@@ -1,0 +1,9 @@
+{
+    "project_name": "PCM - Phone Contacts Manager",
+    "project": "PCM",
+    "version": "1.0",
+    "year_copy": 2024,
+    "description": "Este é um projeto para gerenciar leads",
+    "author": "João Henrique Mendes",
+    "license": "MIT"
+}

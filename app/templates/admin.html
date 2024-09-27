@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+{% set css_file = 'admin.css' %}
+{% block content %}
+    <main>
+        <h1>Bem-vindo ao Painel admin {{ current_user.name }}!</h1>
+        <div>
+            <!-- Exibir mensagens de flash -->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
+        
+        <h2>Lista de Usuários Logados</h2>
+        <button type="button" onclick="openCreateUserModal()">Criar Usuário</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Função</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>{{ 'Online' if user.is_active else 'Offline' }}</td>
+                        <td>
+                            <button type="button" class="edit-btn" data-id="{{ user.id }}" data-name="{{ user.name }}" data-email="{{ user.email }}" data-role="{{ user.role }}">Editar</button>
+                            <form method="POST" action="/delete_user" style="display:inline;">
+                                <input type="hidden" name="id" value="{{ user.id }}">
+                                <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este usuário?');">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Lista de Empresas</h2>
+        <button type="button" onclick="openCreateCompanyModal()">Criar Empresa</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>CNPJ</th>
+                    <th>Owner ID</th>
+                    <th>Plano</th>
+                    <th>Administradores</th>
+                    <th>Colaboradores</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for company in companies %}
+                    <tr>
+                        <td>{{ company.id }}</td>
+                        <td>{{ company.nome }}</td>
+                        <td>{{ company.cnpj }}</td>
+                        <td>{{ company.owner_id }}</td>
+                        <td>{{ company.plan }}</td>
+                        <td>{{ company.admins }}</td>
+                        <td>{{ company.collaborator }}</td>
+                        <td>
+                            <button type="button" class="edit-company-btn" data-id="{{ company.id }}" data-nome="{{ company.nome }}" data-cnpj="{{ company.cnpj }}" data-owner-id="{{ company.owner_id }}" data-plan="{{ company.plan }}" data-admins="{{ company.admins }}" data-collaborator="{{ company.collaborator }}">Editar</button>
+                            <form method="POST" action="/delete_company" style="display:inline;">
+                                <input type="hidden" name="id" value="{{ company.id }}">
+                                <button type="submit" onclick="return confirm('Tem certeza que deseja excluir esta empresa?');">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Modal de Criação de Usuário -->
+        <div id="createUserModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeCreateUserModal()">&times;</span>
+                <h2>Criar Usuário</h2>
+                <form method="POST" action="/create_user">
+                    <div>
+                        <label for="newUserName">Nome:</label>
+                        <input type="text" id="newUserName" name="name" required>
+                    </div>
+                    <div>
+                        <label for="newUserEmail">Email:</label>
+                        <input type="email" id="newUserEmail" name="email" required>
+                    </div>
+                    <div>
+                        <label for="newUserPassword">Senha:</label>
+                        <input type="password" id="newUserPassword" name="password" required>
+                    </div>
+                    <div>
+                        <label for="newUserRole">Função:</label>
+                        <select id="newUserRole" name="role">
+                            <option value="owner">Dono</option>
+                            <option value="employee">Funcionário</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <button type="submit">Criar Usuário</button>
+                </form>
+            </div>
+        </div>        
+
+        <!-- Modal de Criação de Empresa -->
+        <div id="createCompanyModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeCreateCompanyModal()">&times;</span>
+                <h2>Criar Empresa</h2>
+                <form method="POST" action="/create_company">
+                    <div>
+                        <label for="newCompanyNome">Nome:</label>
+                        <input type="text" id="newCompanyNome" name="nome" required>
+                    </div>
+                    <div>
+                        <label for="newCompanyCNPJ">CNPJ:</label>
+                        <input type="text" id="newCompanyCNPJ" name="cnpj" required>
+                    </div>
+                    <div>
+                        <label for="newCompanyOwnerId">Owner ID:</label>
+                        <input type="number" id="newCompanyOwnerId" name="owner_id" required>
+                    </div>
+                    <div>
+                        <label for="newCompanyPlan">Plano:</label>
+                        <input type="number" id="newCompanyPlan" name="plan" required>
+                    </div>
+                    <div>
+                        <label for="newCompanyAdmins">Administradores:</label>
+                        <textarea id="newCompanyAdmins" name="admins"></textarea>
+                    </div>
+                    <div>
+                        <label for="newCompanyCollaborator">Colaboradores:</label>
+                        <textarea id="newCompanyCollaborator" name="collaborator"></textarea>
+                    </div>
+                    <button type="submit">Criar Empresa</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal de Edição para Usuário -->
+        <div id="editUserModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeEditModal()">&times;</span>
+                <h2>Editar Usuário</h2>
+                <form method="POST" action="/update_user">
+                    <input type="hidden" name="id" id="userId">
+                    <div>
+                        <label for="userName">Nome:</label>
+                        <input type="text" id="userName" name="name" required>
+                    </div>
+                    <div>
+                        <label for="userEmail">Email:</label>
+                        <input type="email" id="userEmail" name="email" required>
+                    </div>
+                    <div>
+                        <label for="userRole">Função:</label>
+                        <select id="userRole" name="role">
+                            <option value="owner">Dono</option>
+                            <option value="employee">Funcionário</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <button type="submit">Salvar Alterações</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal de Edição para Empresa -->
+        <div id="editCompanyModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeEditCompanyModal()">&times;</span>
+                <h2>Editar Empresa</h2>
+                <form method="POST" action="/update_company">
+                    <input type="hidden" name="id" id="companyId">
+                    <div>
+                        <label for="companyNome">Nome:</label>
+                        <input type="text" id="companyNome" name="nome" required>
+                    </div>
+                    <div>
+                        <label for="companyCNPJ">CNPJ:</label>
+                        <input type="text" id="companyCNPJ" name="cnpj" required>
+                    </div>
+                    <div>
+                        <label for="companyOwnerId">Owner ID:</label>
+                        <input type="number" id="companyOwnerId" name="owner_id" required>
+                    </div>
+                    <div>
+                        <label for="companyPlan">Plano:</label>
+                        <input type="number" id="companyPlan" name="plan" required>
+                    </div>
+                    <div>
+                        <label for="companyAdmins">Administradores:</label>
+                        <textarea id="companyAdmins" name="admins"></textarea>
+                    </div>
+                    <div>
+                        <label for="companyCollaborator">Colaboradores:</label>
+                        <textarea id="companyCollaborator" name="collaborator"></textarea>
+                    </div>
+                    <button type="submit">Salvar Alterações</button>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        function openCreateUserModal() {
+            document.getElementById('createUserModal').style.display = 'block';
+        }
+        
+        function closeCreateUserModal() {
+            document.getElementById('createUserModal').style.display = 'none';
+        }
+
+        function openCreateCompanyModal() {
+            document.getElementById('createCompanyModal').style.display = 'block';
+        }
+        
+        function closeCreateCompanyModal() {
+            document.getElementById('createCompanyModal').style.display = 'none';
+        }
+
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                document.getElementById('userId').value = this.dataset.id;
+                document.getElementById('userName').value = this.dataset.name;
+                document.getElementById('userEmail').value = this.dataset.email;
+                document.getElementById('userRole').value = this.dataset.role;
+                document.getElementById('editUserModal').style.display = 'block';
+            });
+        });
+
+        function closeEditModal() {
+            document.getElementById('editUserModal').style.display = 'none';
+        }
+
+        document.querySelectorAll('.edit-company-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                document.getElementById('companyId').value = this.dataset.id;
+                document.getElementById('companyNome').value = this.dataset.nome;
+                document.getElementById('companyCNPJ').value = this.dataset.cnpj;
+                document.getElementById('companyOwnerId').value = this.dataset.ownerId;
+                document.getElementById('companyPlan').value = this.dataset.plan;
+                document.getElementById('companyAdmins').value = this.dataset.admins;
+                document.getElementById('companyCollaborator').value = this.dataset.collaborator;
+                document.getElementById('editCompanyModal').style.display = 'block';
+            });
+        });
+
+        function closeEditCompanyModal() {
+            document.getElementById('editCompanyModal').style.display = 'none';
+        }
+    </script>
+{% endblock %}
