@@ -10,7 +10,7 @@ def create_app():
     
     # Configurações
     app.config['SECRET_KEY'] = 'f8ee8897dc09a283101bac9111785cbf1ca69a812a79e23075db7e3c4ecfbcaf'  # Defina uma chave secreta
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://pcm_leads:Pcm@123INFRA@pcm_leads.mysql.dbaas.com.br/pcm_leads'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://pcm_leads:Pcm%40123INFRA@pcm_leads.mysql.dbaas.com.br/pcm_leads'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     db.init_app(app)
