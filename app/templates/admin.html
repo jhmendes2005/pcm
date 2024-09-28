@@ -91,7 +91,7 @@
             <div class="modal-content">
                 <span class="close" onclick="closeCreateUserModal()">&times;</span>
                 <h2>Criar Usuário</h2>
-                <form method="POST" action="/create_user">
+                <form method="POST" action="/create_user" onsubmit="showLoader()">
                     <div>
                         <label for="newUserName">Nome:</label>
                         <input type="text" id="newUserName" name="name" required>
@@ -122,7 +122,7 @@
             <div class="modal-content">
                 <span class="close" onclick="closeCreateCompanyModal()">&times;</span>
                 <h2>Criar Empresa</h2>
-                <form method="POST" action="/create_company">
+                <form method="POST" action="/create_company" onsubmit="showLoader()">
                     <div>
                         <label for="newCompanyNome">Nome:</label>
                         <input type="text" id="newCompanyNome" name="nome" required>
@@ -157,7 +157,7 @@
             <div class="modal-content">
                 <span class="close" onclick="closeEditModal()">&times;</span>
                 <h2>Editar Usuário</h2>
-                <form method="POST" action="/update_user">
+                <form method="POST" action="/update_user" onsubmit="showLoader()">
                     <input type="hidden" name="id" id="userId">
                     <div>
                         <label for="userName">Nome:</label>
@@ -185,7 +185,7 @@
             <div class="modal-content">
                 <span class="close" onclick="closeEditCompanyModal()">&times;</span>
                 <h2>Editar Empresa</h2>
-                <form method="POST" action="/update_company">
+                <form method="POST" action="/update_company" onsubmit="showLoader()">
                     <input type="hidden" name="id" id="companyId">
                     <div>
                         <label for="companyNome">Nome:</label>

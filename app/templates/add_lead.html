@@ -3,7 +3,7 @@
 {% block content %}
     <div>
         <h1>Adicionar Lead</h1>
-        <form method="POST" action="{{ url_for('add_lead') }}">
+        <form method="POST" action="{{ url_for('add_lead') }}" onsubmit="showLoader()">
             <label for="empresa_id">Selecionar Empresa:</label>
             <select name="empresa_id" id="empresa_id" required>
                 {% for company in companies %}

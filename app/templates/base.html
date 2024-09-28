@@ -56,6 +56,12 @@
         {% endwith %}
     </span>
 
+    <!-- Adicione isso no seu template base (base.html) -->
+    <div id="loader" style="display: none;">
+        <div class="spinner"></div>
+        <p>Carregando...</p>
+    </div>
+
     <main>
         {% block content %}
         {% endblock %}
@@ -90,6 +96,26 @@
         };
 
         inactivityTime();
+
+        function showLoader() {
+            document.getElementById('loader').style.display = 'flex';
+        }
+
+        function hideLoader() {
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        // Mostrar o loader em todas as requisições AJAX
+        document.addEventListener('DOMContentLoaded', function () {
+            const xhr = new XMLHttpRequest();
+            const originalOpen = xhr.open;
+            
+            xhr.open = function() {
+                showLoader();
+                this.addEventListener('loadend', hideLoader);
+                return originalOpen.apply(this, arguments);
+            };
+        });
     </script>
 </body>
 </html>

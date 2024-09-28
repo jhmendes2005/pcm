@@ -8,7 +8,7 @@
         </section>
         
         <!-- Formulário para selecionar a empresa -->
-        <form id="select-company" method="GET" action="{{ url_for('leads') }}">
+        <form id="select-company" method="GET" action="{{ url_for('leads') }}" onsubmit="showLoader()">
             <label for="company" id="label-leads-select">Selecionar Empresa:</label>
             <select name="company_id" id="company" onchange="this.form.submit()">
                 {% for company in companies %}
@@ -20,7 +20,7 @@
         </form>
         
         <section id="forms-export-filter">       
-            <form method="GET" action="{{ url_for('leads') }}" id="filter-leads">
+            <form method="GET" action="{{ url_for('leads') }}" id="filter-leads" onsubmit="showLoader()">
                 <input type="hidden" name="company_id" value="{{ selected_company.id }}">
                 <label for="status">Filtrar por Status:</label>
                 <select name="status" id="status">
@@ -40,7 +40,7 @@
                 </select>
                 <button type="submit">Filtrar</button>
             </form>
-            <form method="GET" action="{{ url_for('export_leads') }}" id="export-leads">
+            <form method="GET" action="{{ url_for('export_leads') }}" id="export-leads" onsubmit="showLoader()">
                 <input type="hidden" name="company_id" value="{{ selected_company.id }}">
                 <button type="submit">Exportar Leads</button>
             </form>
@@ -94,7 +94,7 @@
     <div id="editLeadModal" style="display:none;">
         <div>
             <h2>Editar Lead</h2>
-            <form id="edit-lead-form" method="POST" action="{{ url_for('update_lead') }}">
+            <form id="edit-lead-form" method="POST" action="{{ url_for('update_lead') }}" onsubmit="showLoader()">
                 <input type="hidden" name="lead_id" id="lead_id">
                 <label for="lead_nome">Nome:</label>
                 <input type="text" name="lead_nome" id="lead_nome" required>
