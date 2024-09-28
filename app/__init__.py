@@ -13,14 +13,12 @@ def create_app():
     app.config['SECRET_KEY'] = 'f8ee8897dc09a283101bac9111785cbf1ca69a812a79e23075db7e3c4ecfbcaf'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://pcm_leads:Pcm%40123INFRA@pcm_leads.mysql.dbaas.com.br/pcm_leads'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-    # Configuração do pool de conexões para SQLAlchemy
-    engine = create_engine(
-        app.config['SQLALCHEMY_DATABASE_URI'],
-        pool_pre_ping=True,  # Testa a conexão antes de usá-la
-        pool_size=10,  # Tamanho do pool de conexões
-        max_overflow=20  # Número máximo de conexões extras
-    )
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        'pool_pre_ping': True,  # Testa a conexão antes de usá-la
+        'pool_size': 10,        # Tamanho do pool de conexões
+        'max_overflow': 20,     # Número máximo de conexões extras
+        'pool_recycle': 280     # Reciclar conexões após 280 segundos
+    }
 
     db.init_app(app)
     login_manager.init_app(app)
