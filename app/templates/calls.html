@@ -4,10 +4,11 @@
     <div>
         <section id="section-title">
             <h1 id="title-page">Painel de Ligações!</h1>
-            <h2 id="company-title">Você está gerenciando a empresa '{{ company.nome }}'</h2>
+            <h2 id="company-title">Você está na empresa '{{ company.nome }}'</h2>
         </section>
-        
-        <!-- Formulário para selecionar a empresa -->
+
+        <!-- Exibir formulário de seleção de empresa apenas para donos -->
+        {% if current_user.role != 'employee' %}
         <form id="select-company" method="GET" action="{{ url_for('calls') }}" onsubmit="showLoader()">
             <label for="company" id="label-leads-select">Selecionar Empresa:</label>
             <select name="company_id" id="company" onchange="this.form.submit()">
@@ -18,56 +19,43 @@
                 {% endfor %}
             </select>
         </form>
+        {% endif %}
         
-        <!-- Seção do Dashboard -->
-        <section id="dashboard" style="max-width: 400px; margin: auto;">
-            <h3>Status dos Leads</h3>
-            <canvas id="leadsStatusChart" width="400" height="400"></canvas>
-        </section>
+        <!-- Botão para abrir o modal -->
+        <button type="button" onclick="openModal()">Gerenciar Lead</button>
+
+        <!-- Modal para exibir e gerenciar o lead -->
+        <div id="leadModal" style="display:none;" onsubmit="showLoader()">
+            <h3>Gerenciando Lead</h3>
+            <form method="POST">
+                <label for="nome">Nome:</label>
+                <input type="text" name="nome" id="nome" value="{{ user_lead.nome }}" required>
+
+                <label for="telefone">Telefone:</label>
+                <input type="text" name="telefone" id="telefone" value="{{ user_lead.telefone }}" required>
+
+                <label for="veiculo">Veículo:</label>
+                <input type="text" name="veiculo" id="veiculo" value="{{ user_lead.veiculo }}" required>
+
+                <label for="comentario">Comentário:</label>
+                <textarea name="comentario" id="comentario" required>{{ user_lead.comentario }}</textarea>
+
+                <button type="submit" name="action" value="finalize">Finalizar</button>
+                <button type="submit" name="action" value="cancel">Cancelar Lead</button>
+                <button type="submit" name="action" value="move_to_end">Mover ao final da fila</button>
+            </form>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const ctx = document.getElementById('leadsStatusChart').getContext('2d');
-        const leadsStatusChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ['Pendente', 'Em Progresso', 'Concluído', 'Cancelado'],
-                datasets: [{
-                    label: 'Status dos Leads',
-                    data: [
-                        {{ status_counts['pending'] }},
-                        {{ status_counts['in_progress'] }},
-                        {{ status_counts['completed'] }},
-                        {{ status_counts['cancelled'] }}
-                    ],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    title: {
-                        display: true,
-                        text: 'Distribuição dos Status dos Leads'
-                    }
-                }
-            }
-        });
+        function openModal() {
+            document.getElementById('leadModal').style.display = 'block';
+        }
+
+        // Função para exibir o carregador ao enviar o formulário
+        function showLoader() {
+            document.getElementById('loader').style.display = 'block';
+        }
     </script>
 {% endblock %}

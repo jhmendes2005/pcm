@@ -63,26 +63,43 @@ def register():
     if current_user.is_authenticated:
         flash('Você já está logado!!')
         return redirect(url_for('home'))
-    
+
     if request.method == 'POST':
         name = request.form['name']
         email = request.form['email']
         pwd = request.form['password']
+        invite_id = request.form.get('invite_id')  # Pega o invite_id do formulário, pode ser None
 
+        # Verifica se o e-mail já está registrado
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
             flash('E-mail já está em uso.')
             return redirect(url_for('register'))
 
+        # Cria a conta com base no invite_id
         if email and pwd:
-            # Definindo o role padrão como 'employee'
-            user = User(name=name, email=email, password=pwd, role='employee')
+            if invite_id:  # Se o invite_id foi fornecido
+                # Valida se existe uma empresa com o invite_id fornecido
+                company = Company.query.filter_by(invite=invite_id).first()
+                if not company:
+                    flash('Invite ID inválido.')
+                    return redirect(url_for('register'))
+                
+                # Associa o usuário à empresa e define o cargo como 'employee'
+                user = User(name=name, email=email, password=pwd, role='employee', company_work=company.id)
+                flash(f'Você foi adicionado à empresa {company.nome}.')
+            else:
+                # Se não foi fornecido invite_id, o usuário é criado sem vínculo de empresa
+                user = User(name=name, email=email, password=pwd, role='employee')
+
             db.session.add(user)
             db.session.commit()
+
             flash('Registro realizado com sucesso! Você pode fazer login agora.')
             return redirect(url_for('login'))
-    
+
     return render_template('register.html', header_title='Registro')
+
 
 @app.route('/create_user', methods=['POST'])
 def create_user():
@@ -515,39 +532,91 @@ def update_lead():
 
     return redirect(url_for('leads', company_id=lead.empresa_id))
 
-@app.route('/calls')
+@app.route('/calls', methods=['GET', 'POST'])
 @login_required
 def calls():
     user_id = current_user.id
-    # Obter a lista de empresas do usuário
-    companies = Company.query.filter_by(owner_id=user_id).all()
-    
-    if not companies:
-        flash('Você não tem uma empresa para acessar leads!')
-        return redirect(url_for('home'))
-    
-    # Obter a empresa selecionada pelo usuário
-    selected_company_id = request.args.get('company_id', companies[0].id)  # Se não houver, seleciona a primeira empresa
-    selected_company = Company.query.get(selected_company_id)
+    companies = []
+    selected_company = None
 
-    if not selected_company:
-        flash('Empresa selecionada não encontrada!')
-        return redirect(url_for('home'))
+    # Verificar se o usuário é um 'employee'
+    if current_user.role == 'owner' or current_user.role == 'admin':
+        flash('Não recomendamos utilizar esta página com este tipo de conta. Favor, utilize uma conta "Colaborador".')
+    if current_user.role == 'employee':
+        company_work_id = current_user.company_work
+        if company_work_id:
+            selected_company = Company.query.get(company_work_id)
+            if not selected_company:
+                flash('A empresa associada não foi encontrada!')
+                return redirect(url_for('home'))
+        else:
+            flash('Você não está associado a nenhuma empresa!')
+            return redirect(url_for('home'))
+    else:
+        companies = Company.query.filter_by(owner_id=user_id).all()
 
-    # Obter os leads da empresa selecionada
-    leads = Leads.query.filter_by(empresa_id=selected_company.id).all()
-    
-    # Contar os status dos leads
-    status_counts = {
-        'pending': 0,
-        'in_progress': 0,
-        'completed': 0,
-        'cancelled': 0
-    }
-    for lead in leads:
-        status_counts[lead.status] += 1
+        if not companies:
+            flash('Você não tem uma empresa para acessar leads!')
+            return redirect(url_for('home'))
 
-    return render_template('calls.html', header_title='Lista de Leads', company=selected_company, companies=companies, selected_company=selected_company,status_counts=status_counts)
+        selected_company_id = request.args.get('company_id', companies[0].id)
+        selected_company = Company.query.get(selected_company_id)
+
+        if not selected_company:
+            flash('Empresa selecionada não encontrada!')
+            return redirect(url_for('home'))
+
+    # Verificar se o usuário já tem um lead 'in_progress'
+    user_lead = Leads.query.filter_by(usuario_id=user_id, status='in_progress').first()
+
+    if not user_lead:
+        # Buscar um lead pendente
+        user_lead = Leads.query.filter_by(empresa_id=selected_company.id, status='pending').first()
+
+        if user_lead:
+            # Atribuir lead ao usuário e atualizar status para 'in_progress'
+            user_lead.usuario_id = user_id
+            user_lead.status = 'in_progress'
+            user_lead.updated_at = datetime.utcnow()
+            db.session.commit()
+
+    # Atualizar ou finalizar o lead com as informações enviadas via POST
+    if request.method == 'POST':
+        action = request.form.get('action')
+        if action == 'finalize':
+            user_lead.nome = request.form['nome']
+            user_lead.telefone = request.form['telefone']
+            user_lead.veiculo = request.form['veiculo']
+            user_lead.comentario = request.form['comentario']
+            user_lead.status = 'completed'
+            db.session.commit()
+            flash('Lead finalizado com sucesso!')
+
+        elif action == 'cancel':
+            user_lead.status = 'cancelled'
+            user_lead.comentario = request.form['comentario']
+            db.session.commit()
+            flash('Lead cancelado com sucesso!')
+
+        elif action == 'move_to_end':
+            # Move o lead para o final da fila
+            last_id = db.session.query(db.func.max(Leads.id)).scalar()
+            user_lead.id = last_id + 1
+            user_lead.status = 'pending'
+            db.session.commit()
+            flash('Lead movido para o final da fila!')
+
+        return redirect(url_for('calls'))
+
+
+    return render_template('calls.html', 
+                           header_title='Lista de Leads', 
+                           company=selected_company, 
+                           companies=companies, 
+                           selected_company=selected_company,
+                           user_lead=user_lead)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

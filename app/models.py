@@ -16,15 +16,17 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     name = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.Enum('owner', 'employee', 'admin'), nullable=False, default='employee')  # Define o papel do usuário
+    role = db.Column(db.Enum('owner', 'employee', 'admin'), nullable=False, default='owner')  # Define o papel do usuário
     is_active = db.Column(db.Boolean, default=False)  # Indica se o usuário está online
     last_active = db.Column(db.DateTime, default=datetime.utcnow)  # Última atividade do usuário
+    company_work = db.Column(db.Integer)
 
-    def __init__(self, name, email, password, role='employee'):
+    def __init__(self, name, email, password, role='owner', company_work=''):
         self.email = email
         self.name = name
         self.password = hash_password(password)
         self.role = role
+        self.company_work = company_work
 
     def verify_password(self, pwd):
         return verify_password(self.password, pwd)
@@ -62,8 +64,9 @@ class Company(db.Model):
     nome = db.Column(db.String(255), nullable=False)  # Nome da empresa
     cnpj = db.Column(db.String(20), nullable=False)  # CNPJ da empresa
     collaborator = db.Column(db.Text, nullable=True)  # Armazena uma lista de colaboradores, talvez em formato JSON ou CSV
+    invite = db.Column(db.String(255))
 
     def __repr__(self):
         return (f"<Company(id={self.id}, owner_id={self.owner_id}, "
                 f"plan={self.plan}, admins={self.admins}, nome={self.nome}, "
-                f"CNPJ={self.CNPJ}, collaborator={self.collaborator})>")
+                f"CNPJ={self.CNPJ}, collaborator={self.collaborator})>, invite={self.invite})>")

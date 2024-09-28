@@ -8,6 +8,15 @@
             <input type="name" name="name" placeholder="Nome" required>
             <input type="email" name="email" placeholder="E-mail" required>
             <input type="password" name="password" placeholder="Senha" required>
+
+            <!-- Botão para ingressar em uma empresa -->
+            <button type="button" onclick="toggleInviteField()">Ingressar em uma empresa</button>
+
+            <!-- Campo INVITE ID, escondido por padrão -->
+            <div id="invite-field" style="display: none;">
+                <input type="text" name="invite_id" placeholder="Invite ID">
+            </div>
+
             <input type="submit" value="Cadastrar">
         </form>
     </div>
@@ -36,6 +45,15 @@
     <script>
         function showLoader() {
             document.getElementById('loader').style.display = 'block'; // Mostra o carregador
+        }
+
+        function toggleInviteField() {
+            var inviteField = document.getElementById('invite-field');
+            if (inviteField.style.display === "none") {
+                inviteField.style.display = "block";  // Mostra o campo Invite ID
+            } else {
+                inviteField.style.display = "none";   // Esconde o campo Invite ID
+            }
         }
     </script>
 {% endblock %}

@@ -9,13 +9,21 @@ main {
     padding: 20px; /* Adiciona espaço interno */
 }
 
-.header {
+.header, #span-message-log {
     display: flex;
     justify-content: space-around;
     align-items: center;
     max-width: 1000px; /* Define uma largura máxima para o main */
     margin: 0 auto; /* Centraliza horizontalmente */
     padding: 20px; /* Adiciona espaço interno */
+}
+
+#message-log {
+    background-color: black;
+    color: white;
+    border-radius: 50px;
+    text-transform: uppercase;
+    padding: 10px;
 }
 
 footer {
