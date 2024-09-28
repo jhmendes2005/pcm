@@ -15,7 +15,7 @@
     <header>
         <nav class="header">
             <div class="logo-layout">
-                <a href="{{ url_for('home') }}" onclick="showLoader()"><img src="https://tecnosync.com.br/wp-content/uploads/2024/09/PCM.png" alt="Logo PCM"></a>
+                <a href="{{ url_for('home') }}"  onclick="showLoader()"><img src="{{ url_for('static', filename='IMG/PCM.svg') }} "></a>
             </div>
             <ul class="menu-header">
                 <li><a href="{{ url_for('home') }}" onclick="showLoader()">Home</a></li>
