@@ -42,6 +42,7 @@
                 <td>{{ company.collaborator }}</td>
                 <td>
                     <button type="button" class="edit-btn" data-id="{{ company.id }}" data-nome="{{ company.nome }}" data-cnpj="{{ company.cnpj }}" data-plan="{{ company.plan }}" data-admins="{{ company.admins }}" data-collaborator="{{ company.collaborator }}">Editar</button>
+                    <button type="button" class="delete-btn" data-id="{{ company.id }}">Excluir</button>
                 </td>
             </tr>
             {% endfor %}
@@ -79,12 +80,30 @@
             </form>
         </div>
     </div>
+
+    <!-- Modal de Exclusão de Empresa -->
+    <div id="deleteCompanyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeDeleteModal()">&times;</span>
+            <h2>Excluir Empresa</h2>
+            <p>Tem certeza de que deseja excluir esta empresa?</p>
+            <label>
+                <input type="checkbox" id="deleteLeadsCheckbox"> Excluir também todos os leads associados
+            </label>
+            <form method="POST" action="/delete_company" onsubmit="showLoader()">
+                <input type="hidden" name="id" id="deleteCompanyId">
+                <input type="hidden" name="delete_leads" id="deleteLeads">
+                <button type="submit">Excluir</button>
+                <button type="button" onclick="closeDeleteModal()">Cancelar</button>
+            </form>
+        </div>
+    </div>
 </main>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    // Função para abrir o modal e preencher os campos com as informações da empresa
+    // Função para abrir o modal de edição e preencher os campos
     function openEditModal(id, nome, cnpj, plan, admins, collaborator) {
         document.getElementById('companyId').value = id;
         document.getElementById('companyNome').value = nome;
@@ -95,12 +114,23 @@
         document.getElementById('editCompanyModal').style.display = 'block';
     }
 
-    // Função para fechar o modal
+    // Função para fechar o modal de edição
     function closeEditModal() {
         document.getElementById('editCompanyModal').style.display = 'none';
     }
 
-    // Adicionar evento de clique para abrir o modal ao clicar no botão "Editar"
+    // Função para abrir o modal de exclusão
+    function openDeleteModal(id) {
+        document.getElementById('deleteCompanyId').value = id;
+        document.getElementById('deleteCompanyModal').style.display = 'block';
+    }
+
+    // Função para fechar o modal de exclusão
+    function closeDeleteModal() {
+        document.getElementById('deleteCompanyModal').style.display = 'none';
+    }
+
+    // Adicionar evento de clique ao botão "Editar"
     document.addEventListener('DOMContentLoaded', function () {
         var editButtons = document.querySelectorAll('.edit-btn');
         editButtons.forEach(function (button) {
@@ -114,13 +144,31 @@
                 openEditModal(companyId, companyNome, companyCNPJ, companyPlan, companyAdmins, companyCollaborator);
             });
         });
+
+        // Adicionar evento de clique ao botão "Excluir"
+        var deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var companyId = this.getAttribute('data-id');
+                openDeleteModal(companyId);
+            });
+        });
     });
 
-    // Fecha o modal se clicar fora do conteúdo do modal
+    // Enviar o valor do checkbox de exclusão de leads ao submeter o formulário
+    document.querySelector('form').addEventListener('submit', function (event) {
+        var deleteLeadsCheckbox = document.getElementById('deleteLeadsCheckbox');
+        document.getElementById('deleteLeads').value = deleteLeadsCheckbox.checked ? 'true' : 'false';
+    });
+
+    // Fechar o modal se clicar fora do conteúdo do modal
     window.onclick = function(event) {
-        const modal = document.getElementById('editCompanyModal');
-        if (event.target == modal) {
-            modal.style.display = 'none';
+        const editModal = document.getElementById('editCompanyModal');
+        const deleteModal = document.getElementById('deleteCompanyModal');
+        if (event.target == editModal) {
+            editModal.style.display = 'none';
+        } else if (event.target == deleteModal) {
+            deleteModal.style.display = 'none';
         }
     }
 </script>

@@ -236,6 +236,7 @@ def create_company():
 @app.route('/delete_company', methods=['POST'])
 def delete_company():
     company_id = request.form.get('id')  # Obtém o ID da empresa do formulário
+    delete_leads = request.form.get('delete_leads') == 'true'  # Verifica se leads devem ser excluídos
     company = Company.query.get(company_id)  # Busca a empresa pelo ID
 
     if not company:
@@ -243,13 +244,19 @@ def delete_company():
         return redirect(url_for('admin_page'))  # Redireciona para a página de listagem
 
     try:
-        db.session.delete(company)  # Exclui a empresa do banco de dados
+        if delete_leads:
+            # Exclui todos os leads associados à empresa
+            Leads.query.filter_by(empresa_id=company_id).delete()
+
+        db.session.delete(company)  # Exclui a empresa
         db.session.commit()  # Confirma a exclusão
-        flash('Empresa excluída com sucesso!', 'success')
+        flash('Empresa e leads excluídos com sucesso!' if delete_leads else 'Empresa excluída com sucesso!', 'success')
     except Exception as e:
+        db.session.rollback()  # Reverte a transação em caso de erro
         flash(f'Ocorreu um erro ao excluir a empresa: {str(e)}', 'error')
 
     return redirect(url_for('admin_page'))  # Redireciona para a página de listagem
+
 
 
 @app.route('/admin-page', methods=['GET', 'POST'])
@@ -506,7 +513,41 @@ def update_lead():
     else:
         flash('Lead não encontrado.', 'error')
 
-    return redirect(url_for('leads', company_id=lead.empresa_id)) 
+    return redirect(url_for('leads', company_id=lead.empresa_id))
+
+@app.route('/calls')
+@login_required
+def calls():
+    user_id = current_user.id
+    # Obter a lista de empresas do usuário
+    companies = Company.query.filter_by(owner_id=user_id).all()
+    
+    if not companies:
+        flash('Você não tem uma empresa para acessar leads!')
+        return redirect(url_for('home'))
+    
+    # Obter a empresa selecionada pelo usuário
+    selected_company_id = request.args.get('company_id', companies[0].id)  # Se não houver, seleciona a primeira empresa
+    selected_company = Company.query.get(selected_company_id)
+
+    if not selected_company:
+        flash('Empresa selecionada não encontrada!')
+        return redirect(url_for('home'))
+
+    # Obter os leads da empresa selecionada
+    leads = Leads.query.filter_by(empresa_id=selected_company.id).all()
+    
+    # Contar os status dos leads
+    status_counts = {
+        'pending': 0,
+        'in_progress': 0,
+        'completed': 0,
+        'cancelled': 0
+    }
+    for lead in leads:
+        status_counts[lead.status] += 1
+
+    return render_template('calls.html', header_title='Lista de Leads', company=selected_company, companies=companies, selected_company=selected_company,status_counts=status_counts)
 
 if __name__ == '__main__':
     app.run(debug=True)

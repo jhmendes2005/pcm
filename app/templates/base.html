@@ -29,7 +29,7 @@
                             {% if current_user.role == 'owner' or current_user.role == 'admin' %}
                                 <li><a href="{{ url_for('leads') }}"  onclick="showLoader()">Gerenciar Leads</a></li>
                             {% endif %}
-                            <li><a href="{{ url_for('leads') }}"  onclick="showLoader()">Ligações</a></li>
+                            <li><a href="{{ url_for('calls') }}"  onclick="showLoader()">Ligações</a></li>
                             <li><a href="{{ url_for('my_account') }}"  onclick="showLoader()">Minha Conta</a></li>
                             <li><a href="{{ url_for('logout') }}"  onclick="showLoader()">Logout</a></li>
                         </ul>

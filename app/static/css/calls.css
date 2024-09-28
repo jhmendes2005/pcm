@@ -1,0 +1,35 @@
+main {
+    margin: 0 auto;
+}
+
+#section-title {
+    display: flex;
+    margin: 10px 0 30px; /* Unifica as margens */
+    flex-wrap: wrap;
+}
+
+#title-page, #company-title {
+    text-align: center;
+    width: 100%;
+}
+
+#title-page {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+#company-title {
+    font-size: 15px;
+}
+
+#select-company {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    margin: 15px 0; /* Unifica margens */
+}
+
+#select-company label {
+    margin-bottom: 5px;
+}
