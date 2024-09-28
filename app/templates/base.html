@@ -15,30 +15,30 @@
     <header>
         <nav class="header">
             <div class="logo-layout">
-                <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='IMG/PCM.png') }} "></a>
+                <a href="{{ url_for('home') }}"  onclick="showLoader()"><img src="{{ url_for('static', filename='IMG/PCM.png') }} "></a>
             </div>
             <ul class="menu-header">
-                <li><a href="{{ url_for('home') }}">Home</a></li>
-                <li><a href="{{ url_for('about') }}">Sobre</a></li>
+                <li><a href="{{ url_for('home') }}" onclick="showLoader()">Home</a></li>
+                <li><a href="{{ url_for('about') }}"  onclick="showLoader()">Sobre</a></li>
                 {% if current_user.is_authenticated %}
                     <li class="dropdown">
-                        <a href="#" class="dropbtn">Minha Conta</a>
+                        <a href="#" class="dropbtn" onclick="showLoader()">Minha Conta</a>
                         <ul class="dropdown-content">
                             <li id="title-name-dropdown">Seja bem vindo(a),</li>
                             <li id="name-dropdown">{{ current_user.name }}</li>
                             {% if current_user.role == 'owner' or current_user.role == 'admin' %}
-                                <li><a href="{{ url_for('leads') }}">Gerenciar Leads</a></li>
+                                <li><a href="{{ url_for('leads') }}"  onclick="showLoader()">Gerenciar Leads</a></li>
                             {% endif %}
-                            <li><a href="{{ url_for('leads') }}">Ligações</a></li>
-                            <li><a href="{{ url_for('my_account') }}">Minha Conta</a></li>
-                            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                            <li><a href="{{ url_for('leads') }}"  onclick="showLoader()">Ligações</a></li>
+                            <li><a href="{{ url_for('my_account') }}"  onclick="showLoader()">Minha Conta</a></li>
+                            <li><a href="{{ url_for('logout') }}"  onclick="showLoader()">Logout</a></li>
                         </ul>
                     </li>
                 {% else %}
-                    <li><a href="{{ url_for('login') }}" id="login-header">Entrar</a></li>
+                    <li><a href="{{ url_for('login') }}" id="login-header"  onclick="showLoader()">Entrar</a></li>
                 {% endif %}
                 {% if current_user.role == 'admin' %}
-                    <li><a href="{{ url_for('admin_page') }}">Painel Admin</a></li>
+                    <li><a href="{{ url_for('admin_page') }}"  onclick="showLoader()">Painel Admin</a></li>
                 {% endif %}
             </ul>
         </nav>
@@ -115,6 +115,15 @@
                 this.addEventListener('loadend', hideLoader);
                 return originalOpen.apply(this, arguments);
             };
+        });
+
+        // Adicionar o evento de clique a todos os links que não possuem target="_blank"
+        const links = document.querySelectorAll('a:not([target="_blank"])');
+
+        links.forEach(link => {
+            link.addEventListener('click', function () {
+                showLoader();
+            });
         });
     </script>
 </body>
