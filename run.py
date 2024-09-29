@@ -302,10 +302,6 @@ def my_account():
     companies = None
     return render_template('my_account.html', header_title='Minha Conta', companies=companies)
 
-@app.route('/about')
-def about():
-    return render_template('about.html', header_title='Sobre Nós')
-
 @app.route('/update_company', methods=['POST'])
 @login_required
 def update_company():
@@ -567,7 +563,7 @@ def calls():
             return redirect(url_for('home'))
 
     # Verificar se o usuário já tem um lead 'in_progress'
-    user_lead = Leads.query.filter_by(usuario_id=user_id, status='in_progress').first()
+    user_lead = Leads.query.filter_by(empresa_id=selected_company.id, usuario_id=user_id, status='in_progress').first()
 
     if not user_lead:
         # Buscar um lead pendente
@@ -579,6 +575,10 @@ def calls():
             user_lead.status = 'in_progress'
             user_lead.updated_at = datetime.utcnow()
             db.session.commit()
+    
+    if not user_lead:
+        flash("Esta empresa não tem leads!")
+        return redirect(url_for('calls'))
 
     # Atualizar ou finalizar o lead com as informações enviadas via POST
     if request.method == 'POST':

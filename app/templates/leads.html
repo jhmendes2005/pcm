@@ -45,7 +45,7 @@
                 <button type="submit">Exportar Leads</button>
             </form>
             <div class="add-import-lead">
-                <a href="{{ url_for('add_lead') }}"  onclick="showLoader()">Adicionar Lead</a>
+                <a href="{{ url_for('add_lead') }}" onclick="showLoader()">Adicionar Lead</a>
             </div>
             <div class="add-import-lead">
                 <a href="{{ url_for('import_leads') }}"  onclick="showLoader()">Importar Leads em Massa</a>
@@ -62,8 +62,6 @@
                         <th>Status</th>
                         <th>Comentário</th>
                         <th>Veículo</th>
-                        <th>Criado em</th>
-                        <th>Atualizado em</th>
                         <th>Ações</th>
                     </tr>
                 {% else %}
@@ -81,8 +79,6 @@
                         <td>{{ lead.status }}</td>
                         <td>{{ lead.comentario }}</td>
                         <td>{{ lead.veiculo }}</td>
-                        <td>{{ lead.created_at }}</td>
-                        <td>{{ lead.updated_at }}</td>
                         <td><a href="#" class="edit-lead" data-lead-id="{{ lead.id }}" data-lead-nome="{{ lead.nome }}" data-lead-telefone="{{ lead.telefone }}" data-lead-status="{{ lead.status }}" data-lead-comentario="{{ lead.comentario }}" data-lead-veiculo="{{ lead.veiculo }}">Editar</a></td>
                     </tr>
                 {% endfor %}

@@ -25,26 +25,29 @@
         <button type="button" onclick="openModal()">Gerenciar Lead</button>
 
         <!-- Modal para exibir e gerenciar o lead -->
-        <div id="leadModal" style="display:none;" onsubmit="showLoader()">
-            <h3>Gerenciando Lead</h3>
-            <form method="POST">
-                <label for="nome">Nome:</label>
-                <input type="text" name="nome" id="nome" value="{{ user_lead.nome }}" required>
+        {% if user_lead %}
+            <div id="leadModal" style="display:none;" onsubmit="showLoader()">
+                <h3>Gerenciando Lead</h3>
+                <form method="POST">
+                    <label for="nome">Nome:</label>
+                    <input type="text" name="nome" id="nome" value="{{ user_lead.nome }}" required>
 
-                <label for="telefone">Telefone:</label>
-                <input type="text" name="telefone" id="telefone" value="{{ user_lead.telefone }}" required>
+                    <label for="telefone">Telefone:</label>
+                    <input type="text" name="telefone" id="telefone" value="{{ user_lead.telefone }}" required>
 
-                <label for="veiculo">Veículo:</label>
-                <input type="text" name="veiculo" id="veiculo" value="{{ user_lead.veiculo }}" required>
+                    <label for="veiculo">Veículo:</label>
+                    <input type="text" name="veiculo" id="veiculo" value="{{ user_lead.veiculo }}" required>
 
-                <label for="comentario">Comentário:</label>
-                <textarea name="comentario" id="comentario" required>{{ user_lead.comentario }}</textarea>
+                    <label for="comentario">Comentário:</label>
+                    <textarea name="comentario" id="comentario" required>{{ user_lead.comentario }}</textarea>
 
-                <button type="submit" name="action" value="finalize">Finalizar</button>
-                <button type="submit" name="action" value="cancel">Cancelar Lead</button>
-                <button type="submit" name="action" value="move_to_end">Mover ao final da fila</button>
-            </form>
-        </div>
+                    <button type="submit" name="action" value="finalize">Finalizar</button>
+                    <button type="submit" name="action" value="cancel">Cancelar Lead</button>
+                    <button type="submit" name="action" value="move_to_end">Mover ao final da fila</button>
+                </form>
+            </div>
+        {% endif %}
+        
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

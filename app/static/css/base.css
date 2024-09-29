@@ -21,9 +21,9 @@ main {
 #message-log {
     background-color: black;
     color: white;
-    border-radius: 50px;
     text-transform: uppercase;
     padding: 10px;
+    border-top: red solid 2px;
 }
 
 footer {

@@ -19,7 +19,6 @@
             </div>
             <ul class="menu-header">
                 <li><a href="{{ url_for('home') }}" onclick="showLoader()">Home</a></li>
-                <li><a href="{{ url_for('about') }}"  onclick="showLoader()">Sobre</a></li>
                 {% if current_user.is_authenticated %}
                     <li class="dropdown">
                         <a href="#" class="dropbtn" onclick="showLoader()">Minha Conta</a>
