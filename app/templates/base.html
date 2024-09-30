@@ -15,10 +15,9 @@
     <header>
         <nav class="header">
             <div class="logo-layout">
-                <a href="{{ url_for('home') }}"  onclick="showLoader()"><img src="{{ url_for('static', filename='img/PCM.svg') }} "></a>
+                <a href="{{ url_for('my_account') }}"  onclick="showLoader()"><img src="{{ url_for('static', filename='img/PCM.svg') }} "></a>
             </div>
             <ul class="menu-header">
-                <li><a href="{{ url_for('home') }}" onclick="showLoader()">Home</a></li>
                 {% if current_user.is_authenticated %}
                     <li class="dropdown">
                         <a href="#" class="dropbtn" onclick="showLoader()">Minha Conta</a>

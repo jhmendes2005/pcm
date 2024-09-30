@@ -9,9 +9,6 @@ import json
 
 app = create_app()
 
-@app.route('/')
-def home():
-    return render_template('index.html')
 
 @app.before_request
 def update_last_active():
@@ -26,11 +23,15 @@ def check_inactivity():
             user.is_active = False
             db.session.commit()
 
+@app.route('/')
+def default():
+        return redirect(url_for('my_account'))
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         flash('Você já está logado!!')
-        return redirect(url_for('home'))
+        return redirect(url_for('my_account'))
     
     if request.method == 'POST':
         email = request.form['email']
@@ -45,10 +46,9 @@ def login():
         user.last_active = datetime.utcnow()  # Atualizar no login
         db.session.commit()
         login_user(user)
-        return redirect(url_for('home'))
+        return redirect(url_for('my_account'))
 
     return render_template('login.html', header_title='Login')
-
 
 @app.route('/logout')
 @login_required
@@ -62,7 +62,7 @@ def logout():
 def register():
     if current_user.is_authenticated:
         flash('Você já está logado!!')
-        return redirect(url_for('home'))
+        return redirect(url_for('my_account'))
 
     if request.method == 'POST':
         name = request.form['name']
@@ -102,6 +102,7 @@ def register():
 
 
 @app.route('/create_user', methods=['POST'])
+@login_required
 def create_user():
     if request.method == 'POST':
         name = request.form['name']
@@ -126,6 +127,7 @@ def create_user():
             return redirect(url_for('admin_page'))  # Substitua pelo nome da sua rota de formulário
 
 @app.route('/delete_user', methods=['POST'])
+@login_required
 def delete_user():
     # Obtém o ID do usuário do formulário
     user_id = request.form.get('id')
@@ -203,7 +205,7 @@ def update_account():
 def update_user():
     if current_user.role != 'admin':
         flash('Você não tem permissões de administrador!')
-        return redirect(url_for('home'))
+        return redirect(url_for('my_account'))
 
     user_id = request.form.get('id')
     user = User.query.get(user_id)
@@ -220,6 +222,7 @@ def update_user():
     return redirect(url_for('admin_page'))
 
 @app.route('/create_company', methods=['GET', 'POST'])
+@login_required
 def create_company():
     if request.method == 'POST':
         # Obtenha os dados do formulário
@@ -251,6 +254,7 @@ def create_company():
     return render_template('create_company.html') 
 
 @app.route('/delete_company', methods=['POST'])
+@login_required
 def delete_company():
     company_id = request.form.get('id')  # Obtém o ID da empresa do formulário
     delete_leads = request.form.get('delete_leads') == 'true'  # Verifica se leads devem ser excluídos
@@ -281,7 +285,7 @@ def delete_company():
 def admin_page():
     if current_user.role != 'admin':
         flash('Você não tem permissões de administrador!')
-        return redirect(url_for('home'))
+        return redirect(url_for('my_account'))
     
     # Recuperar todos os usuários
     users = User.query.all()  # Obtém todos os usuários do banco de dados
@@ -343,7 +347,7 @@ def leads():
     
     if not companies:
         flash('Você não tem uma empresa para acessar leads!')
-        return redirect(url_for('home'))
+        return redirect(url_for('my_account'))
     
     # Obter a empresa selecionada pelo usuário
     selected_company_id = request.args.get('company_id', companies[0].id)  # Se não houver, seleciona a primeira empresa
@@ -351,8 +355,7 @@ def leads():
 
     if not selected_company:
         flash('Empresa selecionada não encontrada!')
-        return redirect(url_for('home'))
-
+        return redirect(url_for('my_account'))
     # Obter o status do filtro, se houver
     status_filter = request.args.get('status', None)
 
@@ -501,6 +504,7 @@ def import_leads():
     return render_template('import_leads.html', empresas=empresas)
 
 @app.route('/update_lead', methods=['POST'])
+@login_required
 def update_lead():
     lead_id = request.form['lead_id']
     nome = request.form['lead_nome']
@@ -544,23 +548,23 @@ def calls():
             selected_company = Company.query.get(company_work_id)
             if not selected_company:
                 flash('A empresa associada não foi encontrada!')
-                return redirect(url_for('home'))
+                return redirect(url_for('my_account'))
         else:
             flash('Você não está associado a nenhuma empresa!')
-            return redirect(url_for('home'))
+            return redirect(url_for('my_account'))
     else:
         companies = Company.query.filter_by(owner_id=user_id).all()
 
         if not companies:
             flash('Você não tem uma empresa para acessar leads!')
-            return redirect(url_for('home'))
+            return redirect(url_for('my_account'))
 
         selected_company_id = request.args.get('company_id', companies[0].id)
         selected_company = Company.query.get(selected_company_id)
 
         if not selected_company:
             flash('Empresa selecionada não encontrada!')
-            return redirect(url_for('home'))
+            return redirect(url_for('my_account'))
 
     # Verificar se o usuário já tem um lead 'in_progress'
     user_lead = Leads.query.filter_by(empresa_id=selected_company.id, usuario_id=user_id, status='in_progress').first()
