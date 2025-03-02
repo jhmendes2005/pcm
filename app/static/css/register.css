@@ -1,0 +1,86 @@
+/* Define o comportamento do box-sizing para todos os elementos */
+* {
+    box-sizing: border-box;
+}
+
+/* Container principal de login */
+#login-container {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    max-width: 400px;
+    background-color: #ce3f3f;
+    border-radius: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Título do formulário de login */
+#login-container h1 {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Estilo do formulário */
+#form-login {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Campos de input e botão */
+#form-login input,
+#form-login button {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+    box-sizing: border-box; /* Garante que o padding não afete a largura */
+}
+
+/* Estilo dos campos de input */
+#form-login input {
+    background-color: white;
+    color: #333;
+    border: 1px solid #ccc;
+}
+
+/* Estilo do botão de submit */
+#form-login button {
+    background-color: #333;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover no botão */
+#form-login button:hover {
+    background-color: white;
+    color: #333;
+    border: 1px solid #333;
+}
+
+/* Texto de cadastro */
+#login-container p {
+    margin-top: 15px;
+    font-size: 14px;
+    color: white;
+}
+
+/* Link de registro */
+#login-container p a {
+    color: white;
+    text-decoration: underline;
+}
+
+#login-container p a:hover {
+    text-decoration: none;
+}

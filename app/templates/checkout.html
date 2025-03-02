@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% set css_file = 'checkout.css' %}
+{% block content %}
+    <div class="checkout-container">
+        <section id="section-title">
+            <h1 id="title-page">Pagamento de Plano</h1>
+            <h2 id="company-title">Escolha o plano e insira os dados do pagamento.</h2>
+        </section>
+        
+        <form method="post" id="payment-form" action="{{ url_for('purchases.processar_pagamento') }}" class="payment-form">
+            <div class="form-group">
+                <label for="plan_id">Selecione o Plano:</label>
+                <select name="plan_id" id="plan_select" onchange="updatePlanDetails()" required>
+                    <option value="">Selecione</option>
+                    {% for plan_id, plan in plans.items() %}
+                        <option value="{{ plan_id }}" data-name="{{ plan['name'] }}" data-price="{{ plan['price'] }}" {% if plan_id == selected_plan_id %}selected{% endif %}>
+                            {{ plan['name'] }} - R${{ plan['price'] }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="plan_details" style="margin-top: 20px;">
+                <h3 id="plan_name"></h3>
+                <p id="plan_price"></p>
+            </div>
+
+            <div class="form-group">
+                <label for="card_number">Número do Cartão:</label>
+                <div id="card-element"></div>
+                <div id="card-errors" role="alert"></div>
+            </div>
+
+            <button type="submit">Pagar</button>
+        </form>
+
+        <!-- Inclusão da biblioteca Stripe -->
+        <script src="https://js.stripe.com/v3/"></script>
+        <script>
+            // Função para atualizar os detalhes do plano selecionado
+            function updatePlanDetails() {
+                var select = document.getElementById('plan_select');
+                var selectedOption = select.options[select.selectedIndex];
+                var planName = selectedOption.getAttribute('data-name');
+                var planPrice = selectedOption.getAttribute('data-price');
+        
+                // Exibe os detalhes do plano selecionado
+                document.getElementById('plan_name').textContent = planName || '';
+                document.getElementById('plan_price').textContent = planPrice ? 'Preço: R$' + planPrice : '';
+            }
+        
+            // Inicializa o Stripe com a chave pública
+            var stripe = Stripe('{{ stripe_public_key }}');  // A chave pública do Stripe configurada no backend
+            var elements = stripe.elements();
+            var cardElement = elements.create('card');
+            cardElement.mount('#card-element');
+        
+            // Quando o formulário for enviado, criamos o token do cartão
+            document.getElementById('payment-form').onsubmit = function(event) {
+                event.preventDefault();
+        
+                // Cria o token para o cartão
+                stripe.createToken(cardElement).then(function(result) {
+                    if (result.error) {
+                        document.getElementById('card-errors').textContent = result.error.message;
+                    } else {
+                        // Adiciona o token gerado no formulário
+                        var tokenInput = document.createElement('input');
+                        tokenInput.type = 'hidden';
+                        tokenInput.name = 'stripe_token';
+                        tokenInput.value = result.token.id;  // O token gerado
+                        document.getElementById('payment-form').appendChild(tokenInput);
+        
+                        // Envia o formulário
+                        document.getElementById('payment-form').submit();
+                    }
+                });
+            };
+        </script>        
+    </div>
+{% endblock %}

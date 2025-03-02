@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% set css_file = 'purchases/services/details.css' %}
+{% block content %}
+
+<div class="banner-container">
+    <img id="banner" src="{{ url_for('static', filename='img/utils/banner-dinamico.svg') }}">
+    <section id="user-data">
+        <h1 id="header-title">Detalhes do Pedido</h1>
+        <h2 id="header-subtitle">Pedido #{{ purchase.id }}</h2>
+    </section>
+</div>
+
+<section class="order-details">
+    <div class="order-card">
+        <h3>Informações do Pedido</h3>
+        <p><strong>Plano:</strong> {{ purchase.plano_id }}</p>
+        <p><strong>Valor:</strong> R$ {{ "%.2f"|format(purchase.valor) }}</p>
+        <p><strong>Data de Compra:</strong> {{ purchase.data_aquisicao.strftime('%d/%m/%Y %H:%M') }}</p>
+        <p><strong>Validade:</strong> {{ purchase.data_expiracao.strftime('%d/%m/%Y %H:%M') if purchase.data_expiracao else 'Indefinido' }}</p>
+        <p><strong>Status do Pagamento:</strong> {{ payment_intent.status }}</p>
+
+        {% if receipt_url %}
+            <a href="{{ receipt_url }}" target="_blank" class="receipt-btn">Ver Comprovante</a>
+        {% else %}
+            <p><em>Comprovante indisponível</em></p>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

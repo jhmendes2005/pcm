@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% set css_file = 'checkout/checkout.css' %}
+{% block content %}
+    <div>
+        <section id="section-title">
+            <h1 id="title-page">Pagamento de Plano</h1>
+            <h2 id="company-title">Escolha o plano e insira os dados do pagamento.</h2>
+        </section>
+        
+        <form method="post" id="payment-form" action="{{ url_for('pagamento') }}">
+            <label for="company_id">Selecione a Empresa:</label>
+            <select name="company_id">
+                {% for company in companies %}
+                    <option value="{{ company.id }}" {% if request.form.get('company_id') == company.id|string %}selected{% endif %}>
+                        {{ company.name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <label for="plan_id">Selecione o Plano:</label>
+            <select name="plan_id">
+                {% for plan_id, plan in plans.items() %}
+                    <option value="{{ plan_id }}">{{ plan['name'] }} - R${{ plan['price'] }}</option>
+                {% endfor %}
+            </select>
+            
+            <label for="card_number">Número do Cartão:</label>
+            <input type="text" name="card_number" id="card_number" required>
+
+            <label for="card_expiration_month">Mês de Expiração:</label>
+            <input type="text" name="card_expiration_month" id="card_expiration_month" required>
+
+            <label for="card_expiration_year">Ano de Expiração:</label>
+            <input type="text" name="card_expiration_year" id="card_expiration_year" required>
+
+            <label for="card_cvc">Código de Segurança (CVC):</label>
+            <input type="text" name="card_cvc" id="card_cvc" required>
+
+            <button type="submit">Pagar</button>
+        </form>
+
+        <script type="text/javascript" src="https://cdn.pagar.me/pagarme.js"></script>
+        <script>
+            // Inicializa o Pagar.me com a chave de API passada pelo Flask
+            var pagarmeClient = PagarMe.client.connect({ api_key: '{{ pagarme_api_key }}' });
+
+            // Quando o formulário for enviado, criamos o hash do cartão
+            document.getElementById('payment-form').onsubmit = function(event) {
+                event.preventDefault();
+
+                var cardNumber = document.getElementById('card_number').value;
+                var cardExpirationMonth = document.getElementById('card_expiration_month').value;
+                var cardExpirationYear = document.getElementById('card_expiration_year').value;
+                var cardCvc = document.getElementById('card_cvc').value;
+
+                pagarmeClient.cards.create({
+                    number: cardNumber,
+                    exp_month: cardExpirationMonth,
+                    exp_year: cardExpirationYear,
+                    cvc: cardCvc
+                }).then(function(card) {
+                    // O hash do cartão gerado
+                    var cardHash = card.id;
+
+                    // Adiciona o hash do cartão no formulário para enviar ao backend
+                    var cardHashInput = document.createElement('input');
+                    cardHashInput.type = 'hidden';
+                    cardHashInput.name = 'card_hash';
+                    cardHashInput.value = cardHash;
+                    document.getElementById('payment-form').appendChild(cardHashInput);
+
+                    // Envia o formulário
+                    document.getElementById('payment-form').submit();
+                }).catch(function(error) {
+                    alert('Erro ao gerar o hash do cartão: ' + error);
+                });
+            };
+        </script>
+    </div>
+{% endblock %}

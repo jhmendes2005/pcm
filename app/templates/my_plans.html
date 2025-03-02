@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% set css_file = 'my_plans.css' %}
+
+{% block content %}
+<main>
+    <h1>Meus Planos</h1>
+
+    <h2>Planos Ativos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome do Plano</th>
+                <th>Data de Aquisição</th>
+                <th>Data de Expiração</th>
+                <th>ID da Cobrança</th>
+                <th>Dias Restantes</th>
+                <th>Máx Leads</th>
+                <th>Máx Funcionários</th>
+                <th>Máx Upload por Arquivo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for plano in planos_ativos %}
+            <tr>
+                <td>{{ plano.name }}</td>
+                <td>{{ plano.data_aquisicao }}</td>
+                <td>{{ plano.data_expiracao }}</td>
+                <td>{{ plano.charge_id }}</td>
+                <td>{{ plano.dias_restantes }}</td>
+                <td>{{ plano.max_leads }}</td>
+                <td>{{ plano.max_employees }}</td>
+                <td>{{ plano.max_upload_per_file }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Planos Inativos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome do Plano</th>
+                <th>Data de Aquisição</th>
+                <th>Data de Expiração</th>
+                <th>ID da Cobrança</th>
+                <th>Máx Leads</th>
+                <th>Máx Funcionários</th>
+                <th>Máx Upload por Arquivo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for plano in planos_inativos %}
+            <tr>
+                <td>{{ plano.name }}</td>
+                <td>{{ plano.data_aquisicao }}</td>
+                <td>{{ plano.data_expiracao }}</td>
+                <td>{{ plano.charge_id }}</td>
+                <td>{{ plano.max_leads }}</td>
+                <td>{{ plano.max_employees }}</td>
+                <td>{{ plano.max_upload_per_file }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</main>
+{% endblock %}

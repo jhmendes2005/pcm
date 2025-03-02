@@ -1,0 +1,83 @@
+/* Container para a imagem e a seção */
+.banner-container {
+    position: relative;
+    width: 100%;
+}
+
+/* Imagem com posicionamento relativo */
+#banner {
+    width: 100%; /* Faz com que a imagem ocupe toda a largura do container */
+    height: auto;
+}
+
+/* Estilo da seção com posicionamento absoluto */
+#user-data {
+    position: absolute;
+    top: 50%;  /* Centraliza verticalmente */
+    left: 50%; /* Centraliza horizontalmente */
+    transform: translate(-50%, -50%); /* Ajuste para garantir a centralização completa */
+    color: white; /* Cor do texto para contrastar com a imagem */
+    z-index: 10; /* Garante que a seção fique acima da imagem */
+    text-align: center; /* Opcional: Alinha o texto ao centro */
+}
+
+/* Estilo do título */
+#header-title {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+/* Estilo do subtítulo */
+#header-subtitle {
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+/* Estilo da seção de detalhes do pedido */
+.order-details {
+    padding: 20px;
+}
+
+/* Estilo do cartão de informações do pedido */
+.order-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Título da seção de informações */
+.order-card h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Parágrafos de informações do pedido */
+.order-card p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+/* Link para visualizar o comprovante */
+.receipt-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ce3f3f;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.receipt-btn:hover {
+    background-color: #b23838;
+}
+
+/* Estilo de texto para quando o comprovante não estiver disponível */
+.order-card em {
+    font-size: 14px;
+    color: #888;
+}

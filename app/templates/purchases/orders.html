@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% set css_file = 'purchases/purchases.css' %}
+{% block content %}
+    <div class="banner-container">
+        <img id="banner" src="{{ url_for('static', filename='img/utils/banner-dinamico.svg') }}">
+        <section id="user-data">
+            <h1 id="header-title">Minha Assinatura:</h1>
+            <h2 id="header-subtitle">Sua assinatura atual está: {{ status_plano }}</h2>
+
+            {% if status_plano == 'Vencido' %}
+                <a href="/renovar-plano" class="renew-link">Contratar Plano</a>
+            {% endif %}
+        </section>
+    </div>
+
+    {% if current_user.role == 'owner' or current_user.role == 'admin' %}
+        {% if purchases %}
+            <section id="user-companies" class="companies-grid">
+                {% for purchase in purchases %}
+                    <div class="company-card" style="background-image: url('{{ url_for('static', filename='img/utils/buttons-companies-select.svg') }}');">
+                        <h3>PedidoID <strong>#{{ purchase.id }}</strong></h3>
+                        <p><strong>Plano:</strong> {{ purchase.plano_id }}</p>
+                        <p><strong>Valor:</strong> {{ purchase.valor if purchase.valor else 'N/A' }}</p>
+                        <p><strong>Data:</strong> {{ purchase.data_aquisicao.strftime('%d/%m/%Y %H:%M') }}</p>
+                        <p><strong>Validade:</strong> {{ purchase.data_expiracao.strftime('%d/%m/%Y %H:%M') if purchase.data_expiracao else 'Indefinido' }}</p>
+                        <!-- Link para a página de detalhes do pedido -->
+                        <a href="{{ url_for('purchases.detalhes_pedido', order_id=purchase.id) }}">Informações</a>
+                    </div>
+                {% endfor %}
+            </section> 
+        {% else %}
+            <h2 id="header-subtitle">Você ainda não tem compras registradas, <a href="{{ url_for('purchases.plans') }}">que tal adquirir um plano?</a></h2>
+        {% endif %}
+    {% endif %}
+{% endblock %}

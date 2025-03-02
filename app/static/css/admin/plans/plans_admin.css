@@ -1,0 +1,135 @@
+/* Botão Criar Plano */
+.create-plan-btn {
+    background-color: #dc3545; /* Vermelho */
+    color: #fff;
+    border: none;
+    border-radius: 25px; /* Borda arredondada */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.create-plan-btn:hover {
+    background-color: #c82333; /* Vermelho mais escuro */
+}
+
+/* Tabela */
+.plan-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border-radius: 50px;
+}
+
+.plan-table th,
+.plan-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.plan-table th {
+    background-color: #c82333; /* Escuro */
+    color: #fff;
+}
+
+/* Estilo para botões de editar e excluir */
+.edit-plan-btn,
+.delete-plan-btn {
+    background-color: gray; /* Azul */
+    color: white;
+    border: none;
+    border-radius: 20px; /* Borda arredondada */
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.edit-plan-btn:hover {
+    background-color: black; /* Azul mais escuro */
+}
+
+.delete-plan-btn {
+    background-color: #dc3545; /* Vermelho */
+}
+
+.delete-plan-btn:hover {
+    background-color: #c82333; /* Vermelho mais escuro */
+}
+
+/* Estilo para as modais */
+.modal {
+    display: none; /* Escondido por padrão */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Fundo escuro e transparente */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Largura da modal */
+    border-radius: 10px; /* Borda arredondada da modal */
+}
+
+/* Estilo para os títulos das modais */
+.modal-content h2 {
+    color: #dc3545; /* Vermelho */
+}
+
+/* Fechar modal */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Grupos de entrada */
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px; /* Borda arredondada */
+    font-size: 14px;
+}
+
+/* Botões de submit */
+.submit-btn {
+    background-color: #dc3545; /* Vermelho */
+    color: #fff;
+    border: none;
+    border-radius: 25px; /* Borda arredondada */
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #c82333; /* Vermelho mais escuro */
+}

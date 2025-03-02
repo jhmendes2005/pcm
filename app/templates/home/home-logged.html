@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% set css_file = 'home/home-logged.css' %}
+{% block content %}
+<main>
+    <img id="banner" src="{{ url_for('static', filename='img/utils/banner.svg') }}">
+    {% if current_user.role == 'owner' or current_user.role == 'admin' %}
+    <section class="section-main">
+        
+        <div>
+            <a href="{{ url_for('companies.companies_page') }}" onclick="showLoader()" class="button-container" style="background-image: url('{{ url_for('static', filename='img/utils/buttons-home.svg') }}');">
+                <h2>Gerenciar Empresas</h2>
+            </a>
+            <a href="{{ url_for('leads.leads_main') }}" onclick="showLoader()" class="button-container" style="background-image: url('{{ url_for('static', filename='img/utils/buttons-home.svg') }}');">
+                <h2>Gerenciar Leads</h2>
+            </a>
+            <a href="{{ url_for('purchases.plans') }}" onclick="showLoader()" class="button-container" style="background-image: url('{{ url_for('static', filename='img/utils/buttons-home.svg') }}');">
+                <h2>Planos</h2>
+            </a>
+            <a href="{{ url_for('integracoes.main') }}" onclick="showLoader()" class="button-container" style="background-image: url('{{ url_for('static', filename='img/utils/buttons-home.svg') }}');">
+                <h2>Integrações</h2>
+            </a>
+        </div>
+    </section>
+    {% endif %}
+    <section class="section-main">
+        <div>
+            <a href="{{ url_for('leads.calls') }}" onclick="showLoader()" class="button-container2" style="background-image: url('{{ url_for('static', filename='img/utils/buttons-home-grey.svg') }}');">
+                <h2>Ligações</h2>
+            </a>
+            <a href="{{ url_for('purchases.orders') }}" onclick="showLoader()" class="button-container2" style="background-image: url('{{ url_for('static', filename='img/utils/buttons-home-grey.svg') }}');">
+                <h2>Financeiro</h2>
+            </a>
+            <a href="{{ url_for('user.my_data') }}" onclick="showLoader()" class="button-container2" style="background-image: url('{{ url_for('static', filename='img/utils/buttons-home-grey.svg') }}');">
+                <h2>Meus Dados</h2>
+            </a>
+        </div>
+    </section>
+</main>
+{% endblock %}

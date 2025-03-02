@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="card p-4 shadow-lg rounded">
+            <h1 class="text-center mb-4">Resultado da Compra</h1>
+            <p class="text-center lead">{{ resultado }}</p>
+            <div class="text-center mt-4">
+                <a href="/plans" class="btn btn-primary btn-lg">Voltar para Planos</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

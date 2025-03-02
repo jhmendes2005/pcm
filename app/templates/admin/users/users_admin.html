@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% set css_file = 'admin/users/users_admin.css' %}
+
+{% block content %}
+    <main>
+        <button type="button" class="create-user-btn" onclick="openCreateUserModal()">Criar Usuário</button>
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Função</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>{{ 'Online' if user.is_active else 'Offline' }}</td>
+                        <td>
+                            <button type="button" class="edit-user-btn" data-id="{{ user.id }}" data-name="{{ user.name }}" data-email="{{ user.email }}" data-role="{{ user.role }}">Editar</button>
+                            <form method="POST" action="/admin/delete_user" style="display:inline;">
+                                <input type="hidden" name="id" value="{{ user.id }}">
+                                <button type="submit" class="delete-user-btn" onclick="return confirm('Tem certeza que deseja excluir este usuário?');">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Modal de Criação de Usuário -->
+        <div id="createUserModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeCreateUserModal()">&times;</span>
+                <h2>Criar Usuário</h2>
+                <form method="POST" action="/create_user" onsubmit="showLoader()">
+                    <div class="input-group">
+                        <label for="newUserName">Nome:</label>
+                        <input type="text" id="newUserName" name="name" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="newUserEmail">Email:</label>
+                        <input type="email" id="newUserEmail" name="email" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="newUserPassword">Senha:</label>
+                        <input type="password" id="newUserPassword" name="password" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="newUserRole">Função:</label>
+                        <select id="newUserRole" name="role">
+                            <option value="owner">Dono</option>
+                            <option value="employee">Funcionário</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="submit-btn">Criar Usuário</button>
+                </form>
+            </div>
+        </div>        
+
+        <!-- Modal de Edição para Usuário -->
+        <div id="editUserModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeEditModal()">&times;</span>
+                <h2>Editar Usuário</h2>
+                <form method="POST" action="/admin/update-account" onsubmit="showLoader()">
+                    <input type="hidden" name="id" id="userId">
+                    <div class="input-group">
+                        <label for="userName">Nome:</label>
+                        <input type="text" id="userName" name="name" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="userEmail">Email:</label>
+                        <input type="email" id="userEmail" name="email" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="userRole">Função:</label>
+                        <select id="userRole" name="role">
+                            <option value="owner">Dono</option>
+                            <option value="employee">Funcionário</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="newPassword">Nova Senha (deixe em branco para não alterar):</label>
+                        <input type="password" id="newPassword" name="password">
+                    </div>
+                    <button type="submit" class="submit-btn">Salvar Alterações</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function openCreateUserModal() {
+            document.getElementById('createUserModal').style.display = 'block';
+        }
+        
+        function closeCreateUserModal() {
+            document.getElementById('createUserModal').style.display = 'none';
+        }
+
+        document.querySelectorAll('.edit-user-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const userId = this.dataset.id;
+
+                // Faz uma requisição para obter os dados do usuário
+                fetch(`/admin/edit-user/${userId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            console.error(data.error);
+                        } else {
+                            document.getElementById('userId').value = data.id;
+                            document.getElementById('userName').value = data.name;
+                            document.getElementById('userEmail').value = data.email;
+                            document.getElementById('userRole').value = data.role;
+                            document.getElementById('editUserModal').style.display = 'block';
+                        }
+                    })
+                    .catch(error => console.error('Error fetching user data:', error));
+            });
+        });
+
+        function closeEditModal() {
+            document.getElementById('editUserModal').style.display = 'none';
+        }
+    </script>
+{% endblock %}

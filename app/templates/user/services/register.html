@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% set css_file = 'register.css' %}
+{% block content %}
+    <div id="login-container">
+        <h1>Cadastro</h1> <!-- Título do formulário -->
+
+        <div class="loader" id="loader" style="display: none;"></div>  <!-- Carregador escondido por padrão -->
+        
+        <form id="form-login" action="" method="post" onsubmit="showLoader()">  <!-- Chama a função showLoader ao enviar -->
+            <input type="text" name="name" placeholder="Nome" required>  <!-- Campo de nome -->
+            <input type="email" name="email" placeholder="E-mail" required>  <!-- Campo de e-mail -->
+            <input type="password" name="password" placeholder="Senha" required>  <!-- Campo de senha -->
+
+            <!-- Botão para ingressar em uma empresa -->
+            <button type="button" onclick="toggleInviteField()">Ingressar em uma empresa</button>
+
+            <!-- Campo INVITE ID, escondido por padrão -->
+            <div id="invite-field" style="display: none;">
+                <input type="text" name="invite_id" placeholder="Invite ID">
+            </div>
+
+            <button type="submit">Cadastrar</button>  <!-- Botão de cadastro -->
+        </form>
+
+        <p>Já tem uma conta? <a href="{{ url_for('user.login') }}">Entrar</a></p>  <!-- Link de login -->
+    </div>
+    <script>
+        function toggleInviteField() {
+            const inviteField = document.getElementById('invite-field');
+            if (inviteField.style.display === 'none') {
+                inviteField.style.display = 'block';  // Exibe o campo se ele estiver escondido
+            } else {
+                inviteField.style.display = 'none';  // Esconde o campo se ele estiver visível
+            }
+        }
+    </script>
+{% endblock %}

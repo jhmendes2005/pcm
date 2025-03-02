@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% set css_file = 'leads_manager/leads.css' %}
+{% block content %}
+    <div>
+        <section id="section-title">
+            <h1 id="title-page">Painel de Leads!</h1>
+            <h2 id="company-title">Você está gerenciando a empresa '{{ company.nome }}'</h2>
+        </section>
+        
+        <form id="select-company" method="GET" action="{{ url_for('leads.leads_main') }}" onsubmit="showLoader()">
+            <label for="company" id="label-leads-select">Selecionar Empresa:</label>
+            <select name="company_id" id="company" onchange="this.form.submit()">
+                {% for company in companies %}
+                    <option value="{{ company.id }}" {% if company.id == selected_company.id %}selected{% endif %}>
+                        {{ company.nome }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+        
+        <section id="forms-export-filter">       
+            <form method="GET" action="{{ url_for('leads.leads_main') }}" id="filter-leads" onsubmit="showLoader()">
+                <input type="hidden" name="company_id" value="{{ selected_company.id }}">
+                
+                <!-- Barra de Pesquisa --> 
+                <label for="search-leads">Pesquisar Leads:</label>
+                <input type="text" id="search-leads" name="search" placeholder="Digite o nome ou telefone...">
+
+                <label for="data_inicial">Data Inicial:</label>
+                <input type="date" id="data_inicial" name="data_inicial" value="{{ request.args.get('data_inicial', '') }}">
+
+                <label for="data_final">Data Final:</label>
+                <input type="date" id="data_final" name="data_final" value="{{ request.args.get('data_final', '') }}">
+
+                
+                <label for="status">Filtrar por Status:</label>
+                <select name="status" id="status">
+                    <option value="all" {% if request.args.get('status') == 'all' %}selected{% endif %}>Todos</option>
+                    <option value="pending" {% if request.args.get('status') == 'pending' %}selected{% endif %}>Pendente</option>
+                    <option value="in_progress" {% if request.args.get('status') == 'in_progress' %}selected{% endif %}>Em Andamento</option>
+                    <option value="completed" {% if request.args.get('status') == 'completed' %}selected{% endif %}>{{company.bt_action}}</option>
+                    <option value="cancelled" {% if request.args.get('status') == 'cancelled' %}selected{% endif %}>Cancelado</option>
+                </select>
+                
+                <label for="leads_limit">Exibir:</label>
+                <select name="leads_limit" id="leads_limit">
+                    <option value="20" {% if leads_limit == 20 %}selected{% endif %}>20</option>
+                    <option value="40" {% if leads_limit == 40 %}selected{% endif %}>40</option>
+                    <option value="60" {% if leads_limit == 60 %}selected{% endif %}>60</option>
+                    <option value="80" {% if leads_limit == 80 %}selected{% endif %}>80</option>
+                    <option value="100" {% if leads_limit == 100 %}selected{% endif %}>100</option>
+                </select>
+                <button type="submit">Filtrar</button>
+            </form>
+            
+            {% if not is_mobile %}
+            <form method="GET" action="{{ url_for('leads.export_leads') }}" id="export-leads" onsubmit="showLoader()">
+                <input type="hidden" name="company_id" value="{{ selected_company.id }}">
+                <button type="submit">Exportar Leads</button>
+            </form>
+            <div class="add-import-lead">
+                <a href="{{ url_for('leads.add_lead', empresa_id=selected_company.id) }}" onclick="showLoader()">Adicionar Lead</a>
+            </div>
+            <div class="add-import-lead">
+                <a href="{{ url_for('leads.import_leads') }}"  onclick="showLoader()">Importar Leads em Massa</a>
+            </div>
+            {% endif %}
+        </section>
+        
+        {% if is_mobile %}
+        <div class="add-import-lead-mobile">
+            <a href="{{ url_for('leads.add_lead', empresa_id=selected_company.id) }}" onclick="showLoader()">Adicionar Lead</a>
+        </div>
+        {% endif %}
+
+        <table id="table-leads">
+            <thead>
+                {% if leads %}
+                    <tr>
+                        {% if not is_mobile %}
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Telefone</th>
+                        <th>Status</th>
+                        <th>Produto</th>
+                        <th>Cidade</th>
+                        <th>Ações</th>
+                        {% else %}
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Telefone</th>
+                        <th>Produto</th>
+                        {% endif %}
+                    </tr>
+                {% else %}
+                    <tr>
+                        <th colspan="9">Nenhum lead encontrado.</th>
+                    </tr>
+                {% endif %}
+            </thead>
+            <tbody>
+                {% for lead in leads %}
+                    <tr>
+                        {% if not is_mobile %}
+                        <td>{{ lead.id }}</td>
+                        <td>{{ lead.nome }}</td>
+                        <td>{{ lead.telefone }}</td>
+                        <td>{{ lead.status }}</td>
+                        <td>{{ lead.produto }}</td>
+                        <td>{{ lead.city }}</td>
+                        <td><a href="{{ url_for('leads.edit_lead', lead_id=lead.id) }}" class="edit-lead" >Editar</a></td>
+                        {% else %}
+                        <td>{{ lead.id }}</td>
+                        <td>{{ lead.nome }}</td>
+                        <td>{{ lead.telefone }}</td>
+                        <td>{{ lead.produto }}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -3,19 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self'; 
+    style-src 'self' 'unsafe-inline'; 
+    script-src 'self' https://js.stripe.com https://cdn.pagar.me 'unsafe-inline' 'unsafe-eval'; 
+    img-src 'self' data:; 
+    frame-src 'self' https://js.stripe.com;">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/PCM.svg') }}">
     {% if css_file %}
         <link rel="stylesheet" href="{{ url_for('static', filename='css/' ~ css_file) }}">
     {% endif %}
-    <title>{{ header_title }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>PCM - {{ header_title }}</title>
 </head>
 <body>
     <header>
         <nav class="header">
             <div class="logo-layout">
-                <a href="{{ url_for('my_account') }}"  onclick="showLoader()"><img src="{{ url_for('static', filename='img/PCM.svg') }} "></a>
+                <a href="{{ url_for('home.main') }}"  onclick="showLoader()"><img src="{{ url_for('static', filename='img/PCM.svg') }}"></a>
             </div>
             <ul class="menu-header">
                 {% if current_user.is_authenticated %}
@@ -24,37 +30,39 @@
                         <ul class="dropdown-content">
                             <li id="title-name-dropdown">Seja bem vindo(a),</li>
                             <li id="name-dropdown">{{ current_user.name }}</li>
+                            <li><a href="{{ url_for('home.main') }}"  onclick="showLoader()">Home</a></li>
                             {% if current_user.role == 'owner' or current_user.role == 'admin' %}
-                                <li><a href="{{ url_for('leads') }}"  onclick="showLoader()">Gerenciar Leads</a></li>
+                                <li><a href="{{ url_for('leads.leads_main') }}"  onclick="showLoader()">Gerenciar leads</a></li>
+                                <li><a href="{{ url_for('companies.companies_page') }}"  onclick="showLoader()">Minhas empresas</a></li>
+                                <li><a href="{{ url_for('reports.leads_main') }}"  onclick="showLoader()">Reports de Leads</a></li>
                             {% endif %}
-                            <li><a href="{{ url_for('calls') }}"  onclick="showLoader()">Ligações</a></li>
-                            <li><a href="{{ url_for('my_account') }}"  onclick="showLoader()">Minha Conta</a></li>
-                            <li><a href="{{ url_for('logout') }}"  onclick="showLoader()">Logout</a></li>
+                            <li><a href="{{ url_for('leads.calls') }}"  onclick="showLoader()">Ligações</a></li>
+                            <li><a href="{{ url_for('user.my_data') }}"  onclick="showLoader()">Meus dados</a></li>
+                            <li><a href="{{ url_for('user.logout') }}"  onclick="showLoader()">Logout</a></li>
                         </ul>
                     </li>
                 {% else %}
-                    <li><a href="{{ url_for('login') }}" id="login-header"  onclick="showLoader()">Entrar</a></li>
+                    <li><a href="{{ url_for('user.login') }}" id="login-header"  onclick="showLoader()">Entrar</a></li>
                 {% endif %}
                 {% if current_user.role == 'admin' %}
-                    <li><a href="{{ url_for('admin_page') }}"  onclick="showLoader()">Painel Admin</a></li>
+                    <li><a href="{{ url_for('admin.admin_page') }}"  onclick="showLoader()">Painel Admin</a></li>
                 {% endif %}
             </ul>
         </nav>
     </header>
 
-    <span id="span-message-log">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul id="message-log">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <span id="span-message-log">
+            <ul id="message-log">
                 {% for message in messages %}
-                    <li>{{ message }}</li>
+                <li>{{ message }}</li>
                 {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-    </span>
+            </ul>
+        </span>
+        {% endif %}
+    {% endwith %}
 
-    <!-- Adicione isso no seu template base (base.html) -->
     <div id="loader" style="display: none;">
         <div class="spinner"></div>
         <p>Carregando...</p>
@@ -71,7 +79,10 @@
             <p>{{ project }} - {{ version }} &copy; Todos os direitos reservados {{ year_copy }}</p>
         </div>
     </footer>
-    {% block scripts %}{% endblock %}
+    
+    {% block scripts %}
+    {% endblock %}
+    
     <script>
         let inactivityTime = function () {
             let time;
@@ -84,7 +95,7 @@
 
             function logoutUser() {
                 alert("Você foi desconectado por inatividade.");
-                window.location.href = "{{ url_for('logout') }}";  // Redireciona para o logout
+                window.location.href = "{{ url_for('user.logout') }}";  // Redireciona para o logout
             }
 
             function resetTimer() {
@@ -123,6 +134,18 @@
                 showLoader();
             });
         });
+
+        // Esconder o loader ao carregar a página, incluindo quando o usuário volta na navegação
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) { // Verifica se a página foi carregada do cache
+                hideLoader();
+            }
+        });
+
+        // Chamando hideLoader também na inicialização da página
+        window.onload = function() {
+            hideLoader();
+        };
     </script>
 </body>
 </html>

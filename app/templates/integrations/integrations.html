@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% set css_file = 'home/home-logged.css' %}
+{% block content %}
+<main>
+    <img id="banner" src="{{ url_for('static', filename='img/utils/banner.svg') }}">
+    {% if current_user.role == 'owner' or current_user.role == 'admin' %}
+    <section class="section-main">
+        
+        <div>
+            <a href="{{ url_for('integracoes.autolead') }}" onclick="showLoader()" class="button-container" style="background-image: url('{{ url_for('static', filename='img/utils/buttons-home.svg') }}');">
+                <h2>AutoLead</h2>
+            </a>
+            <a href="{{ url_for('reports.leads_main') }}" onclick="showLoader()" class="button-container" style="background-image: url('{{ url_for('static', filename='img/utils/buttons-home.svg') }}');">
+                <h2>Contacts Plugin</h2>
+            </a>
+        </div>
+    </section>
+    {% endif %}
+</main>
+{% endblock %}

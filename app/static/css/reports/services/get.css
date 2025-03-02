@@ -1,0 +1,155 @@
+main {
+    margin: 0 auto;
+}
+
+#section-title {
+    display: flex;
+    margin: 10px 0 30px; /* Unifica as margens */
+    flex-wrap: wrap;
+}
+
+#title-page, #company-title {
+    text-align: center;
+    width: 100%;
+}
+
+#title-page {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+#company-title {
+    font-size: 15px;
+}
+
+#select-company {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    margin: 15px 0; /* Unifica margens */
+}
+
+#company {
+    min-width: 200px;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: inherit;
+    line-height: inherit;
+    text-align: center;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+#form-content {
+    max-width: 450px;
+    min-width: 300px;
+    display: flex;
+    margin-top: 30px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#form-content label {
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #555;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    font-family: 'Arial', sans-serif;
+    background-color: #fff;
+}
+
+.lead-input-select {
+    text-align: left;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.add-lead-btn {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background-color: #c82333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    font-size: 1.1rem;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-lead-btn:hover {
+    background-color: #a71d2a;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    font-family: 'Arial', sans-serif;
+    color: #555;
+}
+
+table th, table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 1rem;
+}
+
+table th {
+    background-color: #f1f1f1;
+    font-weight: 600;
+}
+
+table tbody tr:hover {
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease-in-out;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tbody tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+@media (max-width: 768px) {
+    #container-main {
+        padding: 10px;
+    }
+
+    #form-content {
+        max-width: 100%;
+        padding: 15px;
+    }
+
+    h1, h2 {
+        font-size: 1.5rem;
+    }
+
+    table th, table td {
+        font-size: 0.9rem;
+        padding: 8px 10px;
+    }
+}

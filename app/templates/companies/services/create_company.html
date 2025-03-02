@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% set css_file = 'companies/services/create_company.css' %}
+
+{% block content %}
+    <section id="user-data">
+        <h1 id="header-title">Criar empresa</h1>
+        <h2 id="header-subtitle">Preencha os dados abaixo para criar a empresa</h2>
+    </section>
+
+    {% if current_user.role == 'owner' or current_user.role == 'admin' %}
+        <div id="createCompanyModal" class="modal-create-company">
+            <div class="modal-create-company-content">
+                <form method="POST" onsubmit="showLoader()">
+                    <div class="input-group-company">
+                        <label for="newCompanyNome">Nome da Empresa:</label>
+                        <input type="text" id="newCompanyNome" name="nome" required>
+                    </div>
+
+                    <div class="input-group-company">
+                        <label for="newCompanyCNPJ">CNPJ:</label>
+                        <input type="text" id="newCompanyCNPJ" name="cnpj" required placeholder="CNPJ" oninput="formatCNPJ(this)" maxlength="18">
+                    </div>
+
+                    <div class="input-group-company">
+                        <label for="newCompanyOwnerId">Owner ID:</label>
+                        <input type="number" id="newCompanyOwnerId" name="owner_id" required value="{{ current_user.id }}" 
+                               {% if current_user.role != 'admin' %}readonly{% endif %}>
+                    </div>
+
+                    <button type="submit" class="submit-company-btn">Criar Empresa</button>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <p>Você não tem permissão para criar uma empresa.</p>
+    {% endif %}
+
+    <script>
+        function formatCNPJ(input) {
+            // Remove caracteres não numéricos
+            const value = input.value.replace(/\D/g, '');
+
+            // Verifica se o valor já está no formato correto
+            if (value.length <= 14) {
+                input.value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')
+                                    .replace(/^(\d{2})(\d{3})(\d{3})(\d{4})$/, '$1.$2.$3/$4')
+                                    .replace(/^(\d{2})(\d{3})(\d{3})$/, '$1.$2.$3')
+                                    .replace(/^(\d{2})(\d{3})$/, '$1.$2')
+                                    .replace(/^(\d{2})$/, '$1');
+            } else {
+                input.value = value.slice(0, 14); // Limita o tamanho máximo
+            }
+        }
+    </script>
+{% endblock %}

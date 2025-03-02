@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% set css_file = 'admin/plans/plans_admin.css' %}
+{% block content %}
+    <main>
+        <button type="button" class="create-plan-btn" onclick="openCreatePlanModal()">Criar Plano</button>
+        <table class="plan-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Preço</th>
+                    <th>Descrição</th>
+                    <th>Colaboradores</th>
+                    <th>Leads</th>
+                    <th>Upload</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for plano_id, atributos in plans.items() %}
+                <tr>
+                    <td>{{ plano_id }}</td>
+                    <td>{{ atributos['name'] }}</td>
+                    <td>{{ atributos['price'] }}</td>
+                    <td>{{ atributos['description'] }}</td>
+                    <td>{{ atributos['max_employees'] }}</td>
+                    <td>{{ atributos['max_leads'] }}</td>
+                    <td>{{ atributos['max_upload_per_file'] }}</td>
+                    <td>
+                        <button type="button" class="edit-plan-btn" data-id="{{ plano_id }}" data-name="{{ atributos['name'] }}" data-price="{{ atributos['price'] }}" data-description="{{ atributos['description'] }}" data-max-leads="{{ atributos['max-leads'] }}" data-max-employees="{{ atributos['max-employees'] }}" data-max_upload_per_file="{{ atributos['max_upload_per_file'] }}">Editar</button>
+                        <form method="POST" action="/delete_plan" style="display:inline;">
+                            <input type="hidden" name="id" value="{{ plano_id }}">
+                            <button type="submit" class="delete-plan-btn" onclick="return confirm('Tem certeza que deseja excluir este plano?');">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Modal de Criação de Plano -->
+        <div id="createPlanModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeCreatePlanModal()">&times;</span>
+                <h2 class="modal-content">Criar Plano</h2>
+                <form method="POST" action="/create_plan" onsubmit="showLoader()">
+                    <div class="input-group">
+                        <label for="newPlanName">Nome:</label>
+                        <input type="text" id="newPlanName" name="name" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="newPlanPrice">Preço:</label>
+                        <input type="number" id="newPlanPrice" name="price" step="0.01" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="newPlanDescription">Descrição:</label>
+                        <textarea id="newPlanDescription" name="description" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Criar Plano</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal de Edição de Plano -->
+        <div id="editPlanModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeEditPlanModal()">&times;</span>
+                <h2 class="modal-content">Editar Plano</h2>
+                <form method="POST" action="/update_plan" onsubmit="showLoader()">
+                    <input type="hidden" name="id" id="planId">
+                    <div class="input-group">
+                        <label for="planName">Nome:</label>
+                        <input type="text" id="planName" name="name" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="planPrice">Preço:</label>
+                        <input type="number" id="planPrice" name="price" step="0.01" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="planDescription">Descrição:</label>
+                        <textarea id="planDescription" name="description" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Salvar Alterações</button>
+                </form>
+            </div>
+        </div>
+    </main>
+    <script>
+        function openCreatePlanModal() {
+            document.getElementById('createPlanModal').style.display = 'block';
+        }
+
+        function closeCreatePlanModal() {
+            document.getElementById('createPlanModal').style.display = 'none';
+        }
+
+        // Altere a classe para 'edit-plan-btn'
+        document.querySelectorAll('.edit-plan-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                document.getElementById('planId').value = this.dataset.id;
+                document.getElementById('planName').value = this.dataset.name;
+                document.getElementById('planPrice').value = this.dataset.price;
+                document.getElementById('planDescription').value = this.dataset.description;
+                document.getElementById('editPlanModal').style.display = 'block';
+            });
+        });
+
+        function closeEditPlanModal() {
+            document.getElementById('editPlanModal').style.display = 'none';
+        }
+    </script>
+{% endblock %}

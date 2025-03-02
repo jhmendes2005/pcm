@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% set css_file = 'admin/companies/companies_admin.css' %}
+
+{% block content %}
+    <main>
+        <button type="button" class="create-company-btn" onclick="openCreateCompanyModal()">Criar Empresa</button>
+        <table class="company-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>CNPJ</th>
+                    <th>Owner ID</th>
+                    <th>Plano</th>
+                    <th>Colaboradores</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for company in companies %}
+                    <tr>
+                        <td>{{ company.id }}</td>
+                        <td>{{ company.nome }}</td>
+                        <td>{{ company.cnpj }}</td>
+                        <td>{{ company.owner_id }}</td>
+                        <td>{{ company.plan }}</td>
+                        <td>{{ company.collaborator }}</td>
+                        <td>
+                            <button type="button" class="edit-company-btn" data-id="{{ company.id }}" data-nome="{{ company.nome }}" data-cnpj="{{ company.cnpj }}" data-owner-id="{{ company.owner_id }}" data-plan="{{ company.plan }}" data-collaborator="{{ company.collaborator }}">Editar</button>
+                            <form method="POST" action="/delete_company" style="display:inline;">
+                                <input type="hidden" name="id" value="{{ company.id }}">
+                                <button type="submit" class="delete-company-btn" onclick="return confirm('Tem certeza que deseja excluir esta empresa?');">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+{% endblock %}

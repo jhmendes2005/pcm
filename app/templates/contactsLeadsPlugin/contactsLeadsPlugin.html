@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% set css_file = 'contactsLeadsPlugin/contactsLeadsPlugin.css' %}
+{% block content %}
+    <div class="main">
+        <section id="section-title">
+            <h1 id="title-page">Gerenciador de Contatos</h1>
+            <h2 id="company-title">Você está gerenciando a empresa '{{ company.nome }}'</h2>
+        </section>
+        
+        <form id="select-company" method="GET" action="{{ url_for('clplugin.my_clplugin') }}" onsubmit="showLoader()">
+            <label for="company" id="label-contacts-select">Selecionar Empresa:</label>
+            <select name="company_id" id="company" onchange="this.form.submit()">
+                {% for company in companies %}
+                    <option value="{{ company.id }}" {% if company.id == selected_company.id %}selected{% endif %}>
+                        {{ company.nome }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+        
+        <section id="forms-filter">
+            <form method="GET" action="{{ url_for('clplugin.my_clplugin') }}" id="filter-contacts" onsubmit="showLoader()">
+                <input type="hidden" name="company_id" value="{{ selected_company.id }}">
+                
+                <!-- Barra de Pesquisa -->
+                <label for="search-contacts">Pesquisar Contatos:</label>
+                <input type="text" id="search-contacts" name="search" placeholder="Digite o nome ou telefone..." value="{{ search_term }}">
+                
+                <label for="contacts_limit">Exibir:</label>
+                <select name="contacts_limit" id="contacts_limit">
+                    <option value="20" {% if contacts_limit == 20 %}selected{% endif %}>20</option>
+                    <option value="40" {% if contacts_limit == 40 %}selected{% endif %}>40</option>
+                    <option value="60" {% if contacts_limit == 60 %}selected{% endif %}>60</option>
+                    <option value="80" {% if contacts_limit == 80 %}selected{% endif %}>80</option>
+                    <option value="100" {% if contacts_limit == 100 %}selected{% endif %}>100</option>
+                </select>
+                <button type="submit">Filtrar</button>
+            </form>
+        </section>
+        
+        <table id="table-contacts">
+            <thead>
+                {% if contacts %}
+                    <tr>
+                        {% if not is_mobile %}
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>Website</th>
+                            <th>Página</th>
+                        {% else %}
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                        {% endif %}
+                    </tr>
+                {% else %}
+                    <tr>
+                        <th colspan="5">Nenhum contato encontrado.</th>
+                    </tr>
+                {% endif %}
+            </thead>
+            <tbody>
+                {% for contact in contacts %}
+                    <tr>
+                        {% if not is_mobile %}
+                            <td>{{ contact.id }}</td>
+                            <td>{{ contact.name }}</td>
+                            <td>{{ contact.phone }}</td>
+                            <td>{{ contact.website }}</td>
+                            <td>{{ contact.page }}</td>
+                        {% else %}
+                            <td>{{ contact.id }}</td>
+                            <td>{{ contact.name }}</td>
+                            <td>{{ contact.phone }}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

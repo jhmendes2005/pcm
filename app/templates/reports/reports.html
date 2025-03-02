@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% set css_file = 'leads_manager/leads.css' %}
+{% block content %}
+    <div>
+        <section id="section-title">
+            <h1 id="title-page">Painel para Reports de Leads!</h1>
+            <h2 id="company-title">Selecione a empresa que deseja obter reports.</h2>
+        </section>
+        
+        <form id="select-company" method="GET" action="{{ url_for('reports.report_leads') }}" onsubmit="showLoader()">
+            <label for="company" id="label-leads-select">Selecionar Empresa:</label>
+            <select name="company_id" id="company">
+                {% for company in companies %}
+                    <option value="{{ company.id }}">
+                        {{ company.nome }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit">Gerar Reports</button>
+        </form>
+    </div>
+{% endblock %}

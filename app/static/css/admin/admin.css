@@ -1,0 +1,18 @@
+/* Container principal da página admin */
+#admin-container {
+    margin: 40px auto;
+    padding: 40px;
+    max-width: 1200px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Cabeçalhos */
+h1, h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: bold;
+}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% set css_file = 'purchases/plans.css' %}
+{% block content %}
+    <div class="checkout-container">
+        <section id="section-title">
+            <h1 id="title-page">Nossos Planos:</h1>
+            <h2 id="company-title">Escolha o plano para melhor atender sua empresa.</h2>
+        </section>
+        {% if current_user.role == 'owner' or current_user.role == 'admin' %}
+        {% if plans %}
+            <section id="user-companies" class="companies-grid">
+                {% for plan_id, plan in plans.items() %}
+                    <div class="company-card" style="background-image: url('{{ url_for('static', filename='img/utils/buttons-menu-red.svg') }}');">
+                        <h3><strong>{{ plan['name'] }}</strong></h3>
+                        <p><strong>Empresas:</strong> R${{ plan['max_companies'] }}</p>
+                        <p><strong>Leads por empresas:</strong> {{ plan['max_leads'] }}</p>
+                        <p><strong>Colaboradores:</strong> {{ plan['max_employees'] }}</p>
+                        <p><strong>Importação por Planilha:</strong> {{ plan['max_upload_per_file'] }}</p>
+                        <!-- Link para a página de pagamento com o plano selecionado -->
+                        <a href="{{ url_for('purchases.pagamento') }}?plan_id={{ plan_id }}">Escolher este plano</a>
+                    </div>
+                {% endfor %}
+            </section> 
+        {% else %}
+            <h2 id="header-subtitle">Você ainda não tem compras registradas, <a href="/comprar_plano">que tal adquirir um plano?</a></h2>
+        {% endif %}
+    {% endif %}
+    </div>
+{% endblock %}

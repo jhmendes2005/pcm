@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% set css_file = 'companies/my_companies.css' %}
+{% block content %}
+    <div class="banner-container">
+        <img id="banner" src="{{ url_for('static', filename='img/utils/banner-dinamico.svg') }}">
+        <section id="user-data">
+            <h1 id="header-title">Minhas empresas:</h1>
+            <h2 id="header-subtitle">Conta: {{current_user.role}}</h2>
+        </section>
+    </div>
+    {% if current_user.role == 'owner' or current_user.role == 'admin' %}
+        {% if companies %}
+            <section id="user-companies" class="companies-grid">
+                {% for company in companies %}
+                    <div class="company-card" style="background-image: url('{{ url_for('static', filename='img/utils/buttons-companies-select.svg') }}');">
+                        <h3>{{ company.nome }}</h3>
+                        <p><strong>CNPJ:</strong> {{ company.cnpj }}</p>
+                        <p onclick="copyToClipboard('{{ company.invite }}')"><strong>INVITE ID:</strong> {{ company.invite }}</p>
+                        <p><strong>Leads Usados:</strong> {{ leads_counts[company.id] }}</p>
+                        <p><strong>Colaboradores:</strong> {{ employees_counts[company.id] }}</p>
+                        <a href="{{ url_for('companies.companies_edit', id=company.id) }}">Editar</a>
+                    </div>
+                {% endfor %}
+            </section> 
+            <button type="button" class="create-company-btn"><a href="{{ url_for('companies.create_company') }}">Criar Empresa</a></button> 
+        {% else %}
+            <h2 id="header-subtitle">Você ainda não tem empresas criadas, <a href="/create_company">que tal criar uma?</a></h2>
+        {% endif %}
+    {% endif %}
+    
+    <script>
+        function copyToClipboard(text) {
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert('Invite ID copiado: ' + text);
+        }
+    </script>
+{% endblock %}

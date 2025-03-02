@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% set css_file = 'leads_manager/services/add_lead.css' %}
+{% block content %}
+    <div id="container-main">
+        <h1>Adicionar Lead</h1>
+        <h1>{{ empresa_name }}</h1>
+        <form id="form-content" method="POST" action="{{ url_for('leads.add_lead', empresa_id=empresa_id) }}" onsubmit="showLoader()">
+            <input type="hidden" name="empresa_id" value="{{ empresa_id }}">
+
+            <label for="nome">Nome:</label>
+            <input class="lead-input-select" type="text" name="nome" id="nome" required>
+
+            <label for="telefone">Telefone:</label>
+            <input class="lead-input-select" type="text" name="telefone" id="telefone" required oninput="formatPhoneNumber(event)">
+
+            <label for="status">Status:</label>
+            <select class="lead-input-select" name="status" id="status" required onchange="toggleEmployeeList()">
+                <option value="pending">Pendente</option>
+                <option value="in_progress">Em Andamento</option>
+                <option value="completed">Finalizado</option>
+                <option value="cancelled">Cancelado</option>
+            </select>
+
+            <!-- Campo de seleção de funcionários exibido quando "in_progress" for selecionado -->
+            <div id="employee-selection" style="display: none;">
+                <label for="funcionario_id">Selecione um Funcionário:</label>
+                {% for funcionario in funcionarios %}
+                    <div>
+                        <input type="checkbox" name="funcionario_id" value="{{ funcionario.id }}" id="funcionario_{{ funcionario.id }}">
+                        <label for="funcionario_{{ funcionario.id }}">{{ funcionario.name }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <label for="comentario">Comentário:</label>
+            <textarea class="lead-input-select" name="comentario" id="comentario"></textarea>
+
+            <label for="produto">Produto de Interesse:</label>
+            <input class="lead-input-select" type="text" name="produto" id="produto">
+
+            <label for="produto">Cidade:</label>
+            <input class="lead-input-select" type="text" name="cidade" id="cidade">
+
+            <button type="submit" class="add-lead-btn">Adicionar Lead</button>
+        </form>
+    </div>
+
+    <script>
+        // Função para exibir ou ocultar a seleção de funcionários com base no status selecionado
+        function toggleEmployeeList() {
+            var statusSelect = document.getElementById("status");
+            var employeeSelection = document.getElementById("employee-selection");
+
+            if (statusSelect.value === "in_progress") {
+                employeeSelection.style.display = "block";
+            } else {
+                employeeSelection.style.display = "none";
+            }
+        }
+
+        // Função para formatar o telefone conforme o usuário digita
+        function formatPhoneNumber(event) {
+            let phone = event.target.value;
+
+            // Remove qualquer caractere não numérico
+            phone = phone.replace(/\D/g, '');
+
+            // Verifica o tamanho da string para aplicar a formatação
+            if (phone.length <= 2) {
+                phone = `(${phone}`;
+            } else if (phone.length <= 7) {
+                phone = `(${phone.substring(0, 2)}) ${phone.substring(2)}`;
+            } else {
+                phone = `(${phone.substring(0, 2)}) ${phone.substring(2, 7)}-${phone.substring(7, 11)}`;
+            }
+
+            // Atualiza o campo de entrada com o telefone formatado
+            event.target.value = phone;
+        }
+    </script>
+{% endblock %}

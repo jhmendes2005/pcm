@@ -1,0 +1,93 @@
+#container-main {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column; /* Alinha os itens em coluna */
+    text-align: center;
+    justify-content: center;
+    max-width: 400px;
+}
+
+#container-main h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+#form-content {
+    max-width: 350px;
+    min-width: 300px;
+    display: flex;
+    margin-top: 20px;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+}
+
+#form-content label {
+    margin-top: 20px;
+    margin-bottom: 4px;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+input {
+    border: none;
+}
+
+.lead-input-select {
+    min-width: 200px;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: inherit;
+    line-height: inherit;
+    text-align: center;
+    border: 1px black solid;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-lead-btn {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #c82333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.add-lead-btn:hover {
+    background-color: #c82333;
+}
+
+.collaborator-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaçamento entre os itens */
+}
+
+.collaborator-item {
+    display: flex;
+    align-items: center; /* Alinha os itens verticalmente no centro */
+    justify-content: space-between; /* Coloca o input e o botão nas extremidades */
+}
+
+.collaborator-item input {
+    flex-grow: 1; /* Faz com que o input ocupe o máximo de espaço disponível */
+    margin-right: 10px; /* Adiciona espaço entre o input e o botão */
+}
+
+.button-remove {
+    padding: 5px 10px;
+    background-color: #c82333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button-remove:hover {
+    background-color: #a71d2a;
+}
+

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% set css_file = 'leads_manager/calls/calls.css' %}
+{% block content %}
+    <div>
+        <section id="section-title">
+            <h1 id="title-page">Painel de Ligações!</h1>
+            <h2 id="company-title">Você está na empresa '{{ company.nome }}'</h2>
+        </section>
+
+        <!-- Exibir formulário de seleção de empresa apenas para donos -->
+        {% if current_user.role != 'employee' %}
+        <form id="select-company" method="GET" action="{{ url_for('leads.calls') }}" onsubmit="showLoader()">
+            <label for="company" id="label-leads-select">Selecionar Empresa:</label>
+            <select name="company_id" id="company" onchange="this.form.submit()">
+                {% for company in companies %}
+                    <option value="{{ company.id }}" {% if company.id == selected_company.id %}selected{% endif %}>
+                        {{ company.nome }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+        {% endif %}
+        
+        <div id="container-button-gerency-leads">
+            <button type="button" onclick="openModal()" id="button-gerency-leads">Gerar Lead</button>
+        </div>
+        {% if user_lead %}
+            <div id="leadModal" style="display:none;" onsubmit="showLoader()">
+                <form id="form-content" method="POST">
+                    <label for="nome">Nome:</label>
+                    <input class="lead-input-select" type="text" name="nome" id="nome" value="{{ user_lead.nome }}" required>
+
+                    <label for="telefone">Telefone:</label>
+                    <input class="lead-input-select"  type="text" name="telefone" id="telefone" value="{{ user_lead.telefone }}" required>
+
+                    <label for="produto">{{ company.bt_type_product }}</label>
+                    <input class="lead-input-select"  type="text" name="produto" id="produto" value="{{ user_lead.produto }}">
+
+                    <label for="produto">Cidade:</label>
+                    <input class="lead-input-select" type="text" name="cidade" id="cidade" value="{{ user_lead.cidade }}">
+
+                    <label for="comentario">Comentário:</label>
+                    <textarea class="lead-input-select"  name="comentario" id="comentario" required></textarea>
+                    {% if leads_comments %}
+                        <label for="comentarios_antigos">Histórico de comentários:</label>
+                        {% for comment in leads_comments %}
+                            <textarea class="old-comment" disabled>{{ comment.comentario }}</textarea>
+                            <h3>Feito por: {{ comment.nome_usuario}} ID {{ comment.usuario_id }}</h3>
+                        {% else %}
+                            <h2>Este lead não tem comentários antigos.</h2>
+                        {% endfor %}
+                    {% endif %}
+                    <button class="save-lead-btn" type="submit" name="action" value="finalize">{{ company.bt_action }}</button>
+                    <button class="save-lead-btn" type="submit" name="action" value="cancel">Cancelar Lead</button>
+                    <button class="save-lead-btn" type="submit" name="action" value="move_to_end">Mover ao final da fila</button>
+                </form>
+            </div>
+        {% else %}
+            <section id="section-title">
+                <h2 id="company-title">Sem leads na empresa '{{ company.nome }}'</h2>
+            </section>
+        {% endif %}
+        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function openModal() {
+            document.getElementById('leadModal').style.display = 'block';
+        }
+
+        // Função para exibir o carregador ao enviar o formulário
+        function showLoader() {
+            document.getElementById('loader').style.display = 'block';
+        }
+    </script>
+{% endblock %}

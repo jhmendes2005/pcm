@@ -1,0 +1,154 @@
+main {
+    margin: 0 auto;
+}
+
+#section-title {
+    display: flex;
+    margin: 10px 0 30px; /* Unifica as margens */
+    flex-wrap: wrap;
+}
+
+#title-page, #company-title {
+    text-align: center;
+    width: 100%;
+}
+
+#title-page {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+#company-title {
+    font-size: 15px;
+}
+
+#select-company {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    margin: 15px 0; /* Unifica margens */
+}
+
+#select-company label {
+    margin-bottom: 5px;
+}
+
+#company {
+    min-width: 200px;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: inherit;
+    line-height: inherit;
+    text-align: center;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+#company option {
+    padding: 6px;
+    border-radius: 50px;
+}
+
+#button-gerency-leads {
+    padding: 10px 15px;
+    background-color: #c82333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#button-gerency-leads:hover {
+    background-color: #ce3f3f;
+}
+
+#container-button-gerency-leads {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#leadModal {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#container-main {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-content: space-around;
+    max-width: 400px;
+    flex-wrap: wrap;
+}
+
+#container-main h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+#form-content {
+    margin: 0 auto;
+    max-width: 350px;
+    min-width: 300px;
+    display: flex;
+    margin-top: 20px;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+}
+
+#form-content label {
+    margin-top: 20px;
+    margin-bottom: 4px;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+input {
+    border: none;
+}
+
+.lead-input-select {
+    min-width: 200px;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: inherit;
+    line-height: inherit;
+    text-align: center;
+    border: 1px black solid;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.old-comment {
+    margin-top: 30px;
+}
+
+.save-lead-btn {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #c82333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.save-lead-btn:hover {
+    background-color: #c82333;
+}
+
+#cancel-button {
+    margin-top: 10px;
+    color: #ce3f3f;
+}
+
+#cancel-button:hover {
+    color: black;
+}

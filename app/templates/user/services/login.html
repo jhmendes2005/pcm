@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% set css_file = 'login.css' %}
+{% block content %}
+    <div id="login-container">
+        <h1>Faça seu login</h1>
+        <form method="POST" onsubmit="showLoader()" id="form-login"> <!-- Chama a função showLoader ao enviar -->
+            <input type="email" name="email" placeholder="E-mail" required>
+            <input type="password" name="password" placeholder="Senha" required>
+            <button type="submit">Entrar</button>
+        </form>
+        <p>Ainda não tem uma conta? <a href="{{ url_for('user.register') }}">Registre-se</a></p>
+        <p><a href="{{ url_for('user.forgot_password') }}">Esqueci minha senha</a></p>
+    </div>
+{% endblock %}

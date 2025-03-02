@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% set css_file = 'admin/admin.css' %}
+{% block content %}
+    <main>
+        <h1>Bem-vindo ao Painel admin, {{ current_user.name }}!</h1>
+        <ul>
+            <li>
+                <a href="{{ url_for('admin.users_page_admin') }}" style="text-decoration: none; color: inherit;">
+                    <h2>Gerenciar Usuários</h2>
+                    <h1>{{ user|length }}</h1>
+                    <p>Usuários</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('admin.companies_page_admin') }}" style="text-decoration: none; color: inherit;">
+                    <h2>Gerenciar Empresas</h2>
+                    <h1>{{ companies|length }}</h1>
+                    <p>Empresas</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('admin.plans_page_admin') }}" style="text-decoration: none; color: inherit;">
+                    <h2>Gerenciar Planos</h2>
+                    <h1>{{ plans|length }}</h1>
+                    <p>Planos</p>
+                </a>
+            </li>
+        </ul>
+    </main>
+{% endblock %}

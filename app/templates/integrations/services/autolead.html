@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% set css_file = 'integrations/services/autolead.css' %}
+
+{% block content %}
+    <div class="banner-container">
+        <img id="banner" src="{{ url_for('static', filename='img/utils/banner-dinamico.svg') }}">
+        <section id="user-data">
+            <h1 id="header-title">LeadSync X AutoLead</h1>
+            <h2 id="header-subtitle">Envie confirmações de forma automática em seu WhatsApp!</h2>
+        </section>
+    </div>
+    <section class="forms">
+        <form id="form-content" method="POST" action="{{ url_for('integracoes.autolead') }}">
+            <label for="token-api">Token API:</label>
+            <input class="lead-input-select" type="text" id="token-api" name="token_api" value="{{ integration.token_api if integration else '' }}" required>
+    
+            <label for="lead_status">Status:</label>
+            <select class="lead-input-select" name="lead_status" id="lead_status" required>
+                <option value="active" {% if integration and integration.status == 'active' %}selected{% endif %}>Ativa</option>
+                <option value="inactive" {% if integration and integration.status == 'inactive' %}selected{% endif %}>Inativa</option>
+            </select>
+    
+            <label for="lead_comentario">Mensagem Padrão:</label>
+            <textarea class="lead-input-select" name="lead_comentario" id="lead_comentario">{{ integration.message_alias if integration else '' }}</textarea>
+    
+            <button class="save-lead-btn" type="submit">Salvar Alterações</button>
+            <a id="cancel-button" href="{{ url_for('integracoes.autolead') }}">Cancelar</a>
+        </form>
+    </section>
+{% endblock %}
